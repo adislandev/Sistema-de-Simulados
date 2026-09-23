@@ -27,6 +27,7 @@ export default function Questao() {
   const [indice, setIndice] = useState(0);
   const [selecionada, setSelecionada] = useState<string | null>(null);
   const [segundosDecorridos, setSegundosDecorridos] = useState(0);
+  const [respostaConfirmada, setRespostaConfirmada] = useState(false);
 
   const inicioSimuladoRef = useRef(0);
   const inicioQuestaoRef = useRef(0);
@@ -94,6 +95,8 @@ export default function Questao() {
         ordemApresentacao: indice + 1,
         tempoRespostaSegundos: tempoResposta,
       });
+      setRespostaConfirmada(true);
+      await new Promise(resolve => setTimeout(resolve, 600));
       await avancar(ultima);
     } catch (e) {
       const jaRespondida = e instanceof Error && e.message.includes("já foi respondida");
@@ -116,6 +119,7 @@ export default function Questao() {
     if (!ultima) {
       setIndice((i) => i + 1);
       setSelecionada(null);
+      setRespostaConfirmada(false);
       setEnviando(false);
       return;
     }
@@ -216,11 +220,15 @@ export default function Questao() {
           <button
             type="button"
             className="botao botao-primario botao-bloco"
-            style={{ marginTop: 8 }}
+            style={{ 
+              marginTop: 8, 
+              transition: "transform 0.15s ease", 
+              transform: respostaConfirmada ? "scale(0.98)" : "scale(1)" 
+            }}
             onClick={confirmar}
             disabled={!selecionada || enviando}
           >
-            {enviando ? "Enviando..." : "Confirmar e avançar"}
+            {respostaConfirmada ? "✓ Resposta confirmada" : (enviando ? "Enviando..." : "Confirmar e avançar")}
           </button>
         </div>
       </div>
