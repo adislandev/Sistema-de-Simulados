@@ -1,0 +1,1498 @@
+[
+  {
+    "codigo": "LC-001",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "IDENTICA_PROVA",
+    "origem": "Prova N1 --- Questão 1",
+    "competencia": "rastrear execução de algoritmo com repetição e acumulação",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Considere o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"RepitaSomaB\"",
+      "var",
+      "  n, soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  i <- 1",
+      "  repita",
+      "    leia(n)",
+      "    soma <- soma + n",
+      "    i <- i + 1",
+      "  ate i > 2",
+      "  escreva(\"Total: \", soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se o usuário digitar 6 e 4, qual será a saída?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Total: 10"
+      },
+      {
+        "letra": "B",
+        "texto": "Total: 24"
+      },
+      {
+        "letra": "C",
+        "texto": "Total: 6"
+      },
+      {
+        "letra": "D",
+        "texto": "Total: 4"
+      },
+      {
+        "letra": "E",
+        "texto": "Total: 2"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Considere o algoritmo:\n\n``` text\nalgoritmo \"RepitaSomaB\"\nvar\n  n, soma, i: inteiro\ninicio\n  soma <- 0\n  i <- 1\n  repita\n    leia(n)\n    soma <- soma + n\n    i <- i + 1\n  ate i > 2\n  escreva(\"Total: \", soma)\nfimalgoritmo\n```\n\nSe o usuário digitar 6 e 4, qual será a saída?"
+  },
+  {
+    "codigo": "LC-002",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "IDENTICA_PROVA",
+    "origem": "Prova N1 --- Questão 3",
+    "competencia": "compreender soma simples de dois valores",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Considere:",
+      "",
+      "``` text",
+      "algoritmo \"SomaSimplesB\"",
+      "var",
+      "  x, y, soma: inteiro",
+      "inicio",
+      "  leia(x)",
+      "  leia(y)",
+      "  soma <- x + y",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se o usuário digitar 9 e 1, qual será a saída?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "10"
+      },
+      {
+        "letra": "B",
+        "texto": "9"
+      },
+      {
+        "letra": "C",
+        "texto": "1"
+      },
+      {
+        "letra": "D",
+        "texto": "91"
+      },
+      {
+        "letra": "E",
+        "texto": "0"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Considere:\n\n``` text\nalgoritmo \"SomaSimplesB\"\nvar\n  x, y, soma: inteiro\ninicio\n  leia(x)\n  leia(y)\n  soma <- x + y\n  escreva(soma)\nfimalgoritmo\n```\n\nSe o usuário digitar 9 e 1, qual será a saída?"
+  },
+  {
+    "codigo": "LC-003",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "IDENTICA_PROVA",
+    "origem": "Prova N1 --- Questão 6",
+    "competencia": "interpretar condição para número positivo, negativo ou zero",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Analise:",
+      "",
+      "``` text",
+      "algoritmo \"TesteSe\"",
+      "var",
+      "  n: inteiro",
+      "inicio",
+      "  leia(n)",
+      "  se (n > 0) entao",
+      "    escreva(\"Positivo\")",
+      "  senao",
+      "    escreva(\"Negativo ou zero\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Entrada: -2."
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Positivo"
+      },
+      {
+        "letra": "B",
+        "texto": "Negativo"
+      },
+      {
+        "letra": "C",
+        "texto": "Negativo ou zero"
+      },
+      {
+        "letra": "D",
+        "texto": "Zero"
+      },
+      {
+        "letra": "E",
+        "texto": "Erro"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Analise:\n\n``` text\nalgoritmo \"TesteSe\"\nvar\n  n: inteiro\ninicio\n  leia(n)\n  se (n > 0) entao\n    escreva(\"Positivo\")\n  senao\n    escreva(\"Negativo ou zero\")\n  fimse\nfimalgoritmo\n```\n\nEntrada: -2."
+  },
+  {
+    "codigo": "LC-004",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada nas Questões 2 e 7 da prova",
+    "competencia": "interpretar condição aplicada à soma",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo lê dois números, calcula a soma e mostra \"Acima\" quando a",
+      "soma é maior que 14. Se forem informados 8 e 7, o resultado será:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Acima"
+      },
+      {
+        "letra": "B",
+        "texto": "Abaixo"
+      },
+      {
+        "letra": "C",
+        "texto": "Igual"
+      },
+      {
+        "letra": "D",
+        "texto": "Erro"
+      },
+      {
+        "letra": "E",
+        "texto": "Nenhuma"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Um algoritmo lê dois números, calcula a soma e mostra \"Acima\" quando a\nsoma é maior que 14. Se forem informados 8 e 7, o resultado será:"
+  },
+  {
+    "codigo": "LC-005",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 5 da prova",
+    "competencia": "acompanhar repetição e acumulador",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo inicia `soma` em 0 e repete 3 vezes a operação",
+      "`soma <- soma + 5`. Qual será o resultado final?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "5"
+      },
+      {
+        "letra": "B",
+        "texto": "10"
+      },
+      {
+        "letra": "C",
+        "texto": "15"
+      },
+      {
+        "letra": "D",
+        "texto": "20"
+      },
+      {
+        "letra": "E",
+        "texto": "3"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um algoritmo inicia `soma` em 0 e repete 3 vezes a operação\n`soma <- soma + 5`. Qual será o resultado final?"
+  },
+  {
+    "codigo": "LC-006",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 2 da prova",
+    "competencia": "avaliar condição após operação de soma",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Um algoritmo calcula `soma <- a + b` e verifica se `soma >= 12`. Para os",
+      "valores 5 e 7, qual mensagem deve ser apresentada?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Soma alta"
+      },
+      {
+        "letra": "B",
+        "texto": "Soma baixa"
+      },
+      {
+        "letra": "C",
+        "texto": "Soma igual a 10"
+      },
+      {
+        "letra": "D",
+        "texto": "Erro"
+      },
+      {
+        "letra": "E",
+        "texto": "Nenhuma"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Um algoritmo calcula `soma <- a + b` e verifica se `soma >= 12`. Para os\nvalores 5 e 7, qual mensagem deve ser apresentada?"
+  },
+  {
+    "codigo": "LC-007",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada nas Questões 5 e 8 da prova",
+    "competencia": "compreender repetição com quantidade definida de execuções",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Um algoritmo inicia `soma` em 0 e repete 4 vezes a operação",
+      "`soma <- soma + 2`. Qual será o resultado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "2"
+      },
+      {
+        "letra": "B",
+        "texto": "4"
+      },
+      {
+        "letra": "C",
+        "texto": "6"
+      },
+      {
+        "letra": "D",
+        "texto": "8"
+      },
+      {
+        "letra": "E",
+        "texto": "10"
+      }
+    ],
+    "resposta": "D",
+    "enunciado": "Um algoritmo inicia `soma` em 0 e repete 4 vezes a operação\n`soma <- soma + 2`. Qual será o resultado?"
+  },
+  {
+    "codigo": "LC-008",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 4 da prova",
+    "competencia": "interpretar condição sobre resultado de soma",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo soma 10 e 3. Se a soma for maior que 8, apresenta \"Maior",
+      "que 8\"; caso contrário, apresenta \"Menor ou igual a 8\". Qual será a",
+      "saída?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Maior que 8"
+      },
+      {
+        "letra": "B",
+        "texto": "Menor ou igual a 8"
+      },
+      {
+        "letra": "C",
+        "texto": "Igual a 8"
+      },
+      {
+        "letra": "D",
+        "texto": "Erro"
+      },
+      {
+        "letra": "E",
+        "texto": "Nenhuma"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Um algoritmo soma 10 e 3. Se a soma for maior que 8, apresenta \"Maior\nque 8\"; caso contrário, apresenta \"Menor ou igual a 8\". Qual será a\nsaída?"
+  },
+  {
+    "codigo": "LC-009",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 8 da prova",
+    "competencia": "rastrear soma de vários valores",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo lê três números: 4, 2 e 5, acumulando todos em uma variável",
+      "`soma`. Qual será o resultado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "6"
+      },
+      {
+        "letra": "B",
+        "texto": "9"
+      },
+      {
+        "letra": "C",
+        "texto": "11"
+      },
+      {
+        "letra": "D",
+        "texto": "12"
+      },
+      {
+        "letra": "E",
+        "texto": "15"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um algoritmo lê três números: 4, 2 e 5, acumulando todos em uma variável\n`soma`. Qual será o resultado?"
+  },
+  {
+    "codigo": "LC-010",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 5 da prova",
+    "competencia": "rastrear acumulador em repetição",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Uma variável `soma` começa em 0. Um laço executa 4 vezes e, em cada",
+      "execução, acrescenta 2. Qual será o resultado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "4"
+      },
+      {
+        "letra": "B",
+        "texto": "6"
+      },
+      {
+        "letra": "C",
+        "texto": "8"
+      },
+      {
+        "letra": "D",
+        "texto": "10"
+      },
+      {
+        "letra": "E",
+        "texto": "12"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Uma variável `soma` começa em 0. Um laço executa 4 vezes e, em cada\nexecução, acrescenta 2. Qual será o resultado?"
+  },
+  {
+    "codigo": "LC-011",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 6 da prova",
+    "competencia": "interpretar condição com valor zero",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo verifica `se (n > 0)`. Caso seja verdadeiro, mostra",
+      "\"Positivo\"; caso contrário, mostra \"Negativo ou zero\". Se `n = 0`, o",
+      "resultado é:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Positivo"
+      },
+      {
+        "letra": "B",
+        "texto": "Negativo"
+      },
+      {
+        "letra": "C",
+        "texto": "Zero"
+      },
+      {
+        "letra": "D",
+        "texto": "Negativo ou zero"
+      },
+      {
+        "letra": "E",
+        "texto": "Erro"
+      }
+    ],
+    "resposta": "D",
+    "enunciado": "Um algoritmo verifica `se (n > 0)`. Caso seja verdadeiro, mostra\n\"Positivo\"; caso contrário, mostra \"Negativo ou zero\". Se `n = 0`, o\nresultado é:"
+  },
+  {
+    "codigo": "LC-012",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 7 da prova",
+    "competencia": "avaliar comparação com soma",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo soma 11 e 2 e mostra \"Acima\" se a soma for maior que 12.",
+      "Qual será a saída?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Acima"
+      },
+      {
+        "letra": "B",
+        "texto": "Abaixo"
+      },
+      {
+        "letra": "C",
+        "texto": "Igual"
+      },
+      {
+        "letra": "D",
+        "texto": "Erro"
+      },
+      {
+        "letra": "E",
+        "texto": "Nenhuma"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Um algoritmo soma 11 e 2 e mostra \"Acima\" se a soma for maior que 12.\nQual será a saída?"
+  },
+  {
+    "codigo": "LC-013",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 8 da prova",
+    "competencia": "calcular soma acumulada em repetição",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo lê três valores: 1, 3 e 2, acumulando-os em `soma`. Qual",
+      "será o resultado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "4"
+      },
+      {
+        "letra": "B",
+        "texto": "5"
+      },
+      {
+        "letra": "C",
+        "texto": "6"
+      },
+      {
+        "letra": "D",
+        "texto": "7"
+      },
+      {
+        "letra": "E",
+        "texto": "8"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um algoritmo lê três valores: 1, 3 e 2, acumulando-os em `soma`. Qual\nserá o resultado?"
+  },
+  {
+    "codigo": "LC-014",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 4 da prova",
+    "competencia": "interpretar condição de maior que",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo soma dois números e testa `soma > 8`. Para os valores 4 e",
+      "4, qual mensagem corresponde ao `senao`?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Maior que 8"
+      },
+      {
+        "letra": "B",
+        "texto": "Menor ou igual a 8"
+      },
+      {
+        "letra": "C",
+        "texto": "Maior ou igual a 8"
+      },
+      {
+        "letra": "D",
+        "texto": "Igual a 10"
+      },
+      {
+        "letra": "E",
+        "texto": "Erro"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um algoritmo soma dois números e testa `soma > 8`. Para os valores 4 e\n4, qual mensagem corresponde ao `senao`?"
+  },
+  {
+    "codigo": "LC-015",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "NOVA_MESMO_CONTEUDO",
+    "origem": "mesmo conteúdo das estruturas de repetição da prova",
+    "competencia": "acompanhar incremento em repetição",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Uma variável `soma` começa em 0. Um laço executa 5 vezes e acrescenta 1",
+      "a cada execução. Qual será o resultado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "1"
+      },
+      {
+        "letra": "B",
+        "texto": "4"
+      },
+      {
+        "letra": "C",
+        "texto": "5"
+      },
+      {
+        "letra": "D",
+        "texto": "6"
+      },
+      {
+        "letra": "E",
+        "texto": "10"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Uma variável `soma` começa em 0. Um laço executa 5 vezes e acrescenta 1\na cada execução. Qual será o resultado?"
+  },
+  {
+    "codigo": "LC-016",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "NOVA_MESMO_CONTEUDO",
+    "origem": "mesmo conteúdo de soma da prova",
+    "competencia": "compreender leitura e soma de dois valores",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo lê dois números, soma os valores e mostra o resultado. Se",
+      "forem informados 12 e 8, qual será a saída?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "18"
+      },
+      {
+        "letra": "B",
+        "texto": "20"
+      },
+      {
+        "letra": "C",
+        "texto": "22"
+      },
+      {
+        "letra": "D",
+        "texto": "96"
+      },
+      {
+        "letra": "E",
+        "texto": "128"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um algoritmo lê dois números, soma os valores e mostra o resultado. Se\nforem informados 12 e 8, qual será a saída?"
+  },
+  {
+    "codigo": "LC-017",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "NOVA_MESMO_CONTEUDO",
+    "origem": "mesmo conteúdo de condição com operador E da prova",
+    "competencia": "avaliar duas condições simultaneamente",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Considere a condição `(n > 10) e (n > 14)`. Para `n = 15`, o resultado",
+      "da condição é:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Verdadeiro"
+      },
+      {
+        "letra": "B",
+        "texto": "Falso"
+      },
+      {
+        "letra": "C",
+        "texto": "Erro"
+      },
+      {
+        "letra": "D",
+        "texto": "Zero"
+      },
+      {
+        "letra": "E",
+        "texto": "Indefinido"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Considere a condição `(n > 10) e (n > 14)`. Para `n = 15`, o resultado\nda condição é:"
+  },
+  {
+    "codigo": "LC-018",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "NOVA_MESMO_CONTEUDO",
+    "origem": "mesmo conteúdo de condição com operador E da prova",
+    "competencia": "avaliar duas condições simultaneamente",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Considere a condição `(n > 10) e (n > 14)`. Para `n = 10`, o resultado",
+      "é:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Verdadeiro"
+      },
+      {
+        "letra": "B",
+        "texto": "Falso"
+      },
+      {
+        "letra": "C",
+        "texto": "10"
+      },
+      {
+        "letra": "D",
+        "texto": "14"
+      },
+      {
+        "letra": "E",
+        "texto": "Erro"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Considere a condição `(n > 10) e (n > 14)`. Para `n = 10`, o resultado\né:"
+  },
+  {
+    "codigo": "LC-019",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 2 da prova",
+    "competencia": "interpretar limite de comparação",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Um algoritmo calcula a soma de dois valores e mostra \"Soma alta\" somente",
+      "quando `soma >= 15`. Para os valores 7 e 5, qual será a saída?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Soma alta"
+      },
+      {
+        "letra": "B",
+        "texto": "Soma baixa"
+      },
+      {
+        "letra": "C",
+        "texto": "Soma igual"
+      },
+      {
+        "letra": "D",
+        "texto": "Erro"
+      },
+      {
+        "letra": "E",
+        "texto": "Nenhuma"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um algoritmo calcula a soma de dois valores e mostra \"Soma alta\" somente\nquando `soma >= 15`. Para os valores 7 e 5, qual será a saída?"
+  },
+  {
+    "codigo": "LC-020",
+    "disciplinaSlug": "logica-computacional",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 8 da prova",
+    "competencia": "acompanhar soma de três entradas",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um algoritmo lê três valores: 2, 3 e 4, acumulando todos em uma variável",
+      "`soma`. Qual será o resultado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "7"
+      },
+      {
+        "letra": "B",
+        "texto": "8"
+      },
+      {
+        "letra": "C",
+        "texto": "9"
+      },
+      {
+        "letra": "D",
+        "texto": "10"
+      },
+      {
+        "letra": "E",
+        "texto": "12"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um algoritmo lê três valores: 2, 3 e 4, acumulando todos em uma variável\n`soma`. Qual será o resultado?"
+  },
+  {
+    "codigo": "ERG-001",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "IDENTICA_PROVA",
+    "origem": "Prova N1 --- Questão 1",
+    "competencia": "identificar eficiência segundo ISO 9241-11",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um aluno desenvolveu um protótipo no Figma e percebeu que os usuários",
+      "conseguem concluir tarefas, mas com dificuldade e demora. Segundo a NBR",
+      "ISO 9241-11, isso indica problema em qual aspecto da usabilidade?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Eficiência"
+      },
+      {
+        "letra": "B",
+        "texto": "Segurança"
+      },
+      {
+        "letra": "C",
+        "texto": "Portabilidade"
+      },
+      {
+        "letra": "D",
+        "texto": "Compatibilidade"
+      },
+      {
+        "letra": "E",
+        "texto": "Programação"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Um aluno desenvolveu um protótipo no Figma e percebeu que os usuários\nconseguem concluir tarefas, mas com dificuldade e demora. Segundo a NBR\nISO 9241-11, isso indica problema em qual aspecto da usabilidade?"
+  },
+  {
+    "codigo": "ERG-002",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "IDENTICA_PROVA",
+    "origem": "Prova N1 --- Questão 2",
+    "competencia": "identificar eficácia segundo ISO 9241-11",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Durante um teste, os usuários conseguem completar uma tarefa",
+      "corretamente, sem erros. Segundo a ISO 9241-11, isso representa:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Eficiência"
+      },
+      {
+        "letra": "B",
+        "texto": "Eficácia"
+      },
+      {
+        "letra": "C",
+        "texto": "Usabilidade técnica"
+      },
+      {
+        "letra": "D",
+        "texto": "Interface gráfica"
+      },
+      {
+        "letra": "E",
+        "texto": "Interação"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Durante um teste, os usuários conseguem completar uma tarefa\ncorretamente, sem erros. Segundo a ISO 9241-11, isso representa:"
+  },
+  {
+    "codigo": "ERG-003",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "IDENTICA_PROVA",
+    "origem": "Prova N1 --- Questão 5",
+    "competencia": "reconhecer a heurística de controle e liberdade do usuário",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um sistema mobile permite que o usuário desfaça uma ação facilmente.",
+      "Isso atende qual heurística de Nielsen?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Consistência e padrões"
+      },
+      {
+        "letra": "B",
+        "texto": "Controle e liberdade do usuário"
+      },
+      {
+        "letra": "C",
+        "texto": "Reconhecimento em vez de memorização"
+      },
+      {
+        "letra": "D",
+        "texto": "Flexibilidade e eficiência"
+      },
+      {
+        "letra": "E",
+        "texto": "Ajuda e documentação"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um sistema mobile permite que o usuário desfaça uma ação facilmente.\nIsso atende qual heurística de Nielsen?"
+  },
+  {
+    "codigo": "ERG-004",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada nas Questões 1 e 2 da prova",
+    "competencia": "diferenciar eficácia e eficiência",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Em um sistema, os usuários conseguem concluir uma tarefa sem erros, mas",
+      "precisam de muito tempo para realizá-la. Qual afirmação está correta?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "A eficácia está comprometida e a eficiência está adequada."
+      },
+      {
+        "letra": "B",
+        "texto": "A eficácia está adequada, mas a eficiência precisa ser melhorada."
+      },
+      {
+        "letra": "C",
+        "texto": "Eficácia e eficiência são exatamente a mesma coisa."
+      },
+      {
+        "letra": "D",
+        "texto": "Apenas a estética está comprometida."
+      },
+      {
+        "letra": "E",
+        "texto": "O problema é exclusivamente de segurança."
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Em um sistema, os usuários conseguem concluir uma tarefa sem erros, mas\nprecisam de muito tempo para realizá-la. Qual afirmação está correta?"
+  },
+  {
+    "codigo": "ERG-005",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 3 da prova",
+    "competencia": "identificar satisfação do usuário",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Após utilizar um aplicativo, os usuários relatam que a experiência foi",
+      "agradável e confortável. Qual aspecto da ISO 9241-11 está diretamente",
+      "relacionado a esse resultado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Eficácia"
+      },
+      {
+        "letra": "B",
+        "texto": "Eficiência"
+      },
+      {
+        "letra": "C",
+        "texto": "Satisfação"
+      },
+      {
+        "letra": "D",
+        "texto": "Portabilidade"
+      },
+      {
+        "letra": "E",
+        "texto": "Compatibilidade"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Após utilizar um aplicativo, os usuários relatam que a experiência foi\nagradável e confortável. Qual aspecto da ISO 9241-11 está diretamente\nrelacionado a esse resultado?"
+  },
+  {
+    "codigo": "ERG-006",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 4 da prova",
+    "competencia": "identificar heurística relacionada ao tratamento de erros",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um aplicativo apresenta uma mensagem clara quando ocorre um erro e",
+      "orienta o usuário sobre como corrigi-lo. Qual heurística de Nielsen está",
+      "diretamente relacionada?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Consistência e padrões"
+      },
+      {
+        "letra": "B",
+        "texto": "Prevenção de erros"
+      },
+      {
+        "letra": "C",
+        "texto": "Reconhecimento em vez de memorização"
+      },
+      {
+        "letra": "D",
+        "texto": "Ajuda o usuário a reconhecer, diagnosticar e corrigir erros"
+      },
+      {
+        "letra": "E",
+        "texto": "Controle e liberdade do usuário"
+      }
+    ],
+    "resposta": "D",
+    "enunciado": "Um aplicativo apresenta uma mensagem clara quando ocorre um erro e\norienta o usuário sobre como corrigi-lo. Qual heurística de Nielsen está\ndiretamente relacionada?"
+  },
+  {
+    "codigo": "ERG-007",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 7 da prova",
+    "competencia": "identificar manipulação direta",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um usuário arrasta um arquivo da área de trabalho diretamente para uma",
+      "pasta usando o mouse. Esse tipo de interação é:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Menu"
+      },
+      {
+        "letra": "B",
+        "texto": "Formulário"
+      },
+      {
+        "letra": "C",
+        "texto": "Manipulação direta"
+      },
+      {
+        "letra": "D",
+        "texto": "Linguagem natural"
+      },
+      {
+        "letra": "E",
+        "texto": "Wizard"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um usuário arrasta um arquivo da área de trabalho diretamente para uma\npasta usando o mouse. Esse tipo de interação é:"
+  },
+  {
+    "codigo": "ERG-008",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 8 da prova",
+    "competencia": "identificar wizard",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um sistema apresenta várias telas sequenciais para orientar o usuário",
+      "durante a instalação de um programa. Esse estilo de interação é:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "CLI"
+      },
+      {
+        "letra": "B",
+        "texto": "Menu"
+      },
+      {
+        "letra": "C",
+        "texto": "Wizard"
+      },
+      {
+        "letra": "D",
+        "texto": "Linguagem natural"
+      },
+      {
+        "letra": "E",
+        "texto": "Gestos"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um sistema apresenta várias telas sequenciais para orientar o usuário\ndurante a instalação de um programa. Esse estilo de interação é:"
+  },
+  {
+    "codigo": "ERG-009",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 6 da prova",
+    "competencia": "identificar interface de linha de comando",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um usuário opera um sistema digitando comandos como `cd`, `ls` e",
+      "`mkdir`. Qual estilo de interface está sendo utilizado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "GUI"
+      },
+      {
+        "letra": "B",
+        "texto": "CLI"
+      },
+      {
+        "letra": "C",
+        "texto": "Voz"
+      },
+      {
+        "letra": "D",
+        "texto": "Toque"
+      },
+      {
+        "letra": "E",
+        "texto": "Gestos"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um usuário opera um sistema digitando comandos como `cd`, `ls` e\n`mkdir`. Qual estilo de interface está sendo utilizado?"
+  },
+  {
+    "codigo": "ERG-010",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada nos estilos de interface da prova",
+    "competencia": "identificar GUI",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um aplicativo apresenta janelas, ícones, botões e elementos clicáveis",
+      "para interação. Qual estilo de interface é esse?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "CLI"
+      },
+      {
+        "letra": "B",
+        "texto": "GUI"
+      },
+      {
+        "letra": "C",
+        "texto": "Voz"
+      },
+      {
+        "letra": "D",
+        "texto": "Linguagem natural"
+      },
+      {
+        "letra": "E",
+        "texto": "Wizard"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um aplicativo apresenta janelas, ícones, botões e elementos clicáveis\npara interação. Qual estilo de interface é esse?"
+  },
+  {
+    "codigo": "ERG-011",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada nos estilos de interface da prova",
+    "competencia": "identificar interação por voz",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um usuário solicita verbalmente a um assistente virtual que ligue as",
+      "luzes de uma sala. Qual estilo de interação está sendo utilizado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "CLI"
+      },
+      {
+        "letra": "B",
+        "texto": "GUI"
+      },
+      {
+        "letra": "C",
+        "texto": "Voz"
+      },
+      {
+        "letra": "D",
+        "texto": "Menu"
+      },
+      {
+        "letra": "E",
+        "texto": "Formulário"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um usuário solicita verbalmente a um assistente virtual que ligue as\nluzes de uma sala. Qual estilo de interação está sendo utilizado?"
+  },
+  {
+    "codigo": "ERG-012",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada nos estilos de interação da prova",
+    "competencia": "identificar interação por gestos",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um aplicativo permite ampliar uma imagem usando um gesto de pinça com",
+      "dois dedos. Esse tipo de interação está relacionado a:"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "CLI"
+      },
+      {
+        "letra": "B",
+        "texto": "Voz"
+      },
+      {
+        "letra": "C",
+        "texto": "Toque"
+      },
+      {
+        "letra": "D",
+        "texto": "Gestos"
+      },
+      {
+        "letra": "E",
+        "texto": "Menu"
+      }
+    ],
+    "resposta": "D",
+    "enunciado": "Um aplicativo permite ampliar uma imagem usando um gesto de pinça com\ndois dedos. Esse tipo de interação está relacionado a:"
+  },
+  {
+    "codigo": "ERG-013",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "NOVA_MESMO_CONTEUDO",
+    "origem": "mesmo conteúdo de estilos de interação da prova",
+    "competencia": "identificar menus",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um sistema organiza comandos em opções como \"Arquivo\", \"Editar\",",
+      "\"Exibir\" e \"Ajuda\", permitindo que o usuário escolha uma delas. Qual",
+      "estilo de interação está representado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Menu"
+      },
+      {
+        "letra": "B",
+        "texto": "Formulário"
+      },
+      {
+        "letra": "C",
+        "texto": "Manipulação direta"
+      },
+      {
+        "letra": "D",
+        "texto": "Wizard"
+      },
+      {
+        "letra": "E",
+        "texto": "CLI"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Um sistema organiza comandos em opções como \"Arquivo\", \"Editar\",\n\"Exibir\" e \"Ajuda\", permitindo que o usuário escolha uma delas. Qual\nestilo de interação está representado?"
+  },
+  {
+    "codigo": "ERG-014",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "NOVA_MESMO_CONTEUDO",
+    "origem": "mesmo conteúdo de estilos de interação da prova",
+    "competencia": "identificar formulários",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Uma página solicita nome, e-mail e senha por meio de campos estruturados",
+      "para preenchimento. Qual estilo de interação está sendo utilizado?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Menu"
+      },
+      {
+        "letra": "B",
+        "texto": "Linguagem natural"
+      },
+      {
+        "letra": "C",
+        "texto": "Formulário"
+      },
+      {
+        "letra": "D",
+        "texto": "Wizard"
+      },
+      {
+        "letra": "E",
+        "texto": "CLI"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Uma página solicita nome, e-mail e senha por meio de campos estruturados\npara preenchimento. Qual estilo de interação está sendo utilizado?"
+  },
+  {
+    "codigo": "ERG-015",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "baseada na Questão 5 e nas heurísticas de Nielsen",
+    "competencia": "reconhecer a heurística reconhecimento em vez de memorização",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Um sistema mostra opções e comandos visíveis na tela para que o usuário",
+      "não precise memorizar códigos. Qual heurística de Nielsen está sendo",
+      "favorecida?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Estética e design minimalista"
+      },
+      {
+        "letra": "B",
+        "texto": "Controle e liberdade do usuário"
+      },
+      {
+        "letra": "C",
+        "texto": "Reconhecimento em vez de memorização"
+      },
+      {
+        "letra": "D",
+        "texto": "Consistência e padrões"
+      },
+      {
+        "letra": "E",
+        "texto": "Prevenção de erros"
+      }
+    ],
+    "resposta": "C",
+    "enunciado": "Um sistema mostra opções e comandos visíveis na tela para que o usuário\nnão precise memorizar códigos. Qual heurística de Nielsen está sendo\nfavorecida?"
+  },
+  {
+    "codigo": "ERG-016",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "conteúdo de heurísticas de Nielsen da prova",
+    "competencia": "reconhecer prevenção de erros",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um botão de confirmação permanece desabilitado enquanto os dados",
+      "obrigatórios de um formulário não forem preenchidos. Qual heurística",
+      "está sendo aplicada?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Flexibilidade e eficiência de uso"
+      },
+      {
+        "letra": "B",
+        "texto": "Prevenção de erros"
+      },
+      {
+        "letra": "C",
+        "texto": "Estética e design minimalista"
+      },
+      {
+        "letra": "D",
+        "texto": "Controle e liberdade do usuário"
+      },
+      {
+        "letra": "E",
+        "texto": "Consistência e padrões"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um botão de confirmação permanece desabilitado enquanto os dados\nobrigatórios de um formulário não forem preenchidos. Qual heurística\nestá sendo aplicada?"
+  },
+  {
+    "codigo": "ERG-017",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "conteúdo de heurísticas de Nielsen da prova",
+    "competencia": "reconhecer consistência e padrões",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Um aplicativo usa a mesma aparência, posição e comportamento para botões",
+      "equivalentes em todas as telas. Qual heurística está sendo aplicada?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Consistência e padrões"
+      },
+      {
+        "letra": "B",
+        "texto": "Prevenção de erros"
+      },
+      {
+        "letra": "C",
+        "texto": "Controle e liberdade do usuário"
+      },
+      {
+        "letra": "D",
+        "texto": "Flexibilidade e eficiência"
+      },
+      {
+        "letra": "E",
+        "texto": "Ajuda e documentação"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Um aplicativo usa a mesma aparência, posição e comportamento para botões\nequivalentes em todas as telas. Qual heurística está sendo aplicada?"
+  },
+  {
+    "codigo": "ERG-018",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "conteúdo de heurísticas de Nielsen da prova",
+    "competencia": "reconhecer visibilidade do status do sistema",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Após o usuário clicar em \"Salvar\", o sistema mostra imediatamente uma",
+      "mensagem informando que o arquivo foi salvo. Qual heurística está sendo",
+      "atendida?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Visibilidade do status do sistema"
+      },
+      {
+        "letra": "B",
+        "texto": "Consistência e padrões"
+      },
+      {
+        "letra": "C",
+        "texto": "Estética e design minimalista"
+      },
+      {
+        "letra": "D",
+        "texto": "Reconhecimento em vez de memorização"
+      },
+      {
+        "letra": "E",
+        "texto": "Controle e liberdade do usuário"
+      }
+    ],
+    "resposta": "A",
+    "enunciado": "Após o usuário clicar em \"Salvar\", o sistema mostra imediatamente uma\nmensagem informando que o arquivo foi salvo. Qual heurística está sendo\natendida?"
+  },
+  {
+    "codigo": "ERG-019",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "conteúdo de heurísticas de Nielsen da prova",
+    "competencia": "reconhecer flexibilidade e eficiência de uso",
+    "dificuldade": "média",
+    "enunciadoLinhas": [
+      "Um sistema oferece atalhos de teclado para usuários experientes,",
+      "mantendo também os comandos tradicionais para iniciantes. Qual",
+      "heurística está relacionada?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Estética e design minimalista"
+      },
+      {
+        "letra": "B",
+        "texto": "Flexibilidade e eficiência de uso"
+      },
+      {
+        "letra": "C",
+        "texto": "Consistência e padrões"
+      },
+      {
+        "letra": "D",
+        "texto": "Controle e liberdade do usuário"
+      },
+      {
+        "letra": "E",
+        "texto": "Prevenção de erros"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Um sistema oferece atalhos de teclado para usuários experientes,\nmantendo também os comandos tradicionais para iniciantes. Qual\nheurística está relacionada?"
+  },
+  {
+    "codigo": "ERG-020",
+    "disciplinaSlug": "ergonomia-ihc",
+    "tipo": "ADAPTADA_PROVA",
+    "origem": "conteúdo de heurísticas de Nielsen da prova",
+    "competencia": "reconhecer estética e design minimalista",
+    "dificuldade": "fácil",
+    "enunciadoLinhas": [
+      "Uma interface remove informações e elementos visuais desnecessários,",
+      "mantendo apenas o que ajuda o usuário a realizar a tarefa. Qual",
+      "heurística está sendo aplicada?"
+    ],
+    "alternativas": [
+      {
+        "letra": "A",
+        "texto": "Consistência e padrões"
+      },
+      {
+        "letra": "B",
+        "texto": "Estética e design minimalista"
+      },
+      {
+        "letra": "C",
+        "texto": "Prevenção de erros"
+      },
+      {
+        "letra": "D",
+        "texto": "Feedback"
+      },
+      {
+        "letra": "E",
+        "texto": "Controle e liberdade do usuário"
+      }
+    ],
+    "resposta": "B",
+    "enunciado": "Uma interface remove informações e elementos visuais desnecessários,\nmantendo apenas o que ajuda o usuário a realizar a tarefa. Qual\nheurística está sendo aplicada?"
+  }
+]
