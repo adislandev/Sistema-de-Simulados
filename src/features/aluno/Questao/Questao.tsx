@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import PortugolCodeBlock from "../../../components/PortugolCodeBlock/PortugolCodeBlock";
 import {
   buscarQuestoesSimulado,
   finalizarTentativa,
@@ -9,6 +10,7 @@ import {
 import { obterAlunoSessao } from "../../../lib/alunoSession";
 import { formatarTempo } from "../../../lib/format";
 import { montarQuestoes } from "../../../lib/montarQuestoes";
+import { extrairBlocoCodigo } from "../../../lib/portugolCodigo";
 import type { IniciarTentativaResultado, QuestaoMontada } from "../../../types/database";
 
 export default function Questao() {
@@ -31,7 +33,7 @@ export default function Questao() {
 
   useEffect(() => {
     if (!aluno || !simuladoId) {
-      navigate("/", { replace: true });
+      navigate("/", { replace: true, state: { proximoSimuladoId: simuladoId } });
       return;
     }
 
@@ -161,6 +163,7 @@ export default function Questao() {
   }
 
   const questaoAtual = questoes[indice];
+  const blocoCodigo = extrairBlocoCodigo(questaoAtual.enunciado);
 
   return (
     <div className="pagina">
@@ -173,9 +176,25 @@ export default function Questao() {
             <span className="texto-suave">{formatarTempo(segundosDecorridos)}</span>
           </div>
 
-          <h1 className="titulo-pagina" style={{ fontSize: "1.15rem", fontWeight: 600 }}>
-            {questaoAtual.enunciado}
-          </h1>
+          {blocoCodigo ? (
+            <>
+              {blocoCodigo.antes && (
+                <p className="titulo-pagina" style={{ fontSize: "1.15rem", fontWeight: 600, marginBottom: 0 }}>
+                  {blocoCodigo.antes}
+                </p>
+              )}
+              <PortugolCodeBlock codigo={blocoCodigo.codigo} titulo={blocoCodigo.titulo} />
+              {blocoCodigo.depois && (
+                <p className="titulo-pagina" style={{ fontSize: "1.15rem", fontWeight: 600, marginTop: 0 }}>
+                  {blocoCodigo.depois}
+                </p>
+              )}
+            </>
+          ) : (
+            <h1 className="titulo-pagina" style={{ fontSize: "1.15rem", fontWeight: 600 }}>
+              {questaoAtual.enunciado}
+            </h1>
+          )}
 
           <div style={{ marginTop: 20 }}>
             {questaoAtual.alternativas.map((alternativa) => (

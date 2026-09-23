@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import Button from "../../../components/Button/Button";
+import Card from "../../../components/Card/Card";
+import Field from "../../../components/Field/Field";
+import PageLayout from "../../../components/PageLayout/PageLayout";
 import { buscarAlunosPorNome, criarAluno, tocarAluno } from "../../../lib/alunoApi";
 import { limparAlunoSessao, obterAlunoSessao, salvarAlunoSessao } from "../../../lib/alunoSession";
 import type { AlunoCandidato } from "../../../types/database";
@@ -8,6 +12,9 @@ type Etapa = "formulario" | "escolha";
 
 export default function Identificacao() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const proximoSimuladoId = (location.state as { proximoSimuladoId?: string } | null)?.proximoSimuladoId;
+  const destino = proximoSimuladoId ? `/simulados/${proximoSimuladoId}/instrucoes` : "/simulados";
   const [sessaoExistente, setSessaoExistente] = useState(obterAlunoSessao());
   const [nome, setNome] = useState("");
   const [turma, setTurma] = useState("");
@@ -21,7 +28,7 @@ export default function Identificacao() {
     setCarregando(true);
     try {
       await tocarAluno(sessaoExistente.id);
-      navigate("/simulados");
+      navigate(destino);
     } catch {
       setErro("Não foi possível continuar. Tente novamente.");
     } finally {
@@ -63,7 +70,7 @@ export default function Identificacao() {
   async function identificarComoNovo(nomeTratado: string) {
     const id = await criarAluno(nomeTratado, turma.trim() || undefined);
     salvarAlunoSessao({ id, nome: nomeTratado });
-    navigate("/simulados");
+    navigate(destino);
   }
 
   async function handleSelecionarCandidato(candidato: AlunoCandidato) {
@@ -72,7 +79,7 @@ export default function Identificacao() {
     try {
       await tocarAluno(candidato.id);
       salvarAlunoSessao({ id: candidato.id, nome: candidato.nome });
-      navigate("/simulados");
+      navigate(destino);
     } catch {
       setErro("Não foi possível continuar. Tente novamente.");
     } finally {
@@ -94,111 +101,90 @@ export default function Identificacao() {
 
   if (sessaoExistente) {
     return (
-      <div className="pagina">
-        <div className="container">
-          <div className="cartao">
-            <h1 className="titulo-pagina">Bem-vindo de volta, {sessaoExistente.nome}</h1>
-            <p className="subtitulo-pagina">Continuar com esta identificação ou usar outro nome?</p>
-            {erro && <p className="mensagem-erro">{erro}</p>}
-            <button
-              type="button"
-              className="botao botao-primario botao-bloco"
-              onClick={continuarComoSessaoExistente}
-              disabled={carregando}
-            >
-              Continuar como {sessaoExistente.nome}
-            </button>
-            <div style={{ marginTop: 12 }}>
-              <button type="button" className="botao botao-secundario botao-bloco" onClick={trocarAluno}>
-                Usar outro nome
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageLayout>
+        <Card>
+          <h1 className="text-2xl font-bold mb-1">Bem-vindo de volta, {sessaoExistente.nome}</h1>
+          <p className="text-ink-soft mb-6 text-[0.95rem]">
+            Continuar com esta identificação ou usar outro nome?
+          </p>
+          {erro && <p className="text-danger-500 text-sm mb-4">{erro}</p>}
+          <Button fullWidth onClick={continuarComoSessaoExistente} disabled={carregando} className="mb-3">
+            Continuar como {sessaoExistente.nome}
+          </Button>
+          <Button variant="secondary" fullWidth onClick={trocarAluno}>
+            Usar outro nome
+          </Button>
+        </Card>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="pagina">
-      <div className="container">
-        <div className="cartao">
-          <h1 className="titulo-pagina">Simulados Acadêmicos</h1>
-          <p className="subtitulo-pagina">Informe seu nome completo para começar.</p>
+    <PageLayout>
+      <Card>
+        <h1 className="text-2xl font-bold mb-1">Simulados Acadêmicos</h1>
+        <p className="text-ink-soft mb-6 text-[0.95rem]">Informe seu nome completo para começar.</p>
 
-          {etapa === "formulario" && (
-            <form onSubmit={handleSubmitFormulario}>
-              <div className="campo">
-                <label htmlFor="nome">Nome completo</label>
-                <input
-                  id="nome"
-                  type="text"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  autoFocus
-                  autoComplete="name"
-                />
-              </div>
-              <div className="campo">
-                <label htmlFor="turma">Turma (opcional)</label>
-                <input
-                  id="turma"
-                  type="text"
-                  value={turma}
-                  onChange={(e) => setTurma(e.target.value)}
-                  autoComplete="off"
-                />
-              </div>
-              {erro && <p className="mensagem-erro">{erro}</p>}
-              <button type="submit" className="botao botao-primario botao-bloco" disabled={carregando}>
-                {carregando ? "Verificando..." : "Continuar"}
-              </button>
-            </form>
-          )}
+        {etapa === "formulario" && (
+          <form onSubmit={handleSubmitFormulario}>
+            <Field
+              label="Nome completo"
+              id="nome"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              autoFocus
+              autoComplete="name"
+            />
+            <Field
+              label="Turma (opcional)"
+              id="turma"
+              type="text"
+              value={turma}
+              onChange={(e) => setTurma(e.target.value)}
+              autoComplete="off"
+            />
+            {erro && <p className="text-danger-500 text-sm mb-4">{erro}</p>}
+            <Button type="submit" fullWidth disabled={carregando}>
+              {carregando ? "Verificando..." : "Continuar"}
+            </Button>
+          </form>
+        )}
 
-          {etapa === "escolha" && (
-            <div>
-              <p className="subtitulo-pagina">
-                Encontramos cadastros parecidos com "{nome.trim()}". Algum deles é você?
-              </p>
-              {erro && <p className="mensagem-erro">{erro}</p>}
-              {candidatos.map((candidato) => (
-                <button
-                  key={candidato.id}
-                  type="button"
-                  className="botao botao-secundario botao-bloco"
-                  style={{ marginBottom: 8, justifyContent: "flex-start" }}
-                  onClick={() => handleSelecionarCandidato(candidato)}
-                  disabled={carregando}
-                >
-                  {candidato.nome}
-                  {candidato.turma ? ` — ${candidato.turma}` : ""}
-                </button>
-              ))}
-              <div style={{ marginTop: 16 }}>
-                <button
-                  type="button"
-                  className="botao botao-primario botao-bloco"
-                  onClick={handleContinuarComoNovo}
-                  disabled={carregando}
-                >
-                  Nenhum desses, sou novo aluno
-                </button>
-              </div>
-              <div style={{ marginTop: 12 }}>
-                <button
-                  type="button"
-                  className="botao botao-secundario botao-bloco"
-                  onClick={() => setEtapa("formulario")}
-                  disabled={carregando}
-                >
-                  Voltar
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+        {etapa === "escolha" && (
+          <div>
+            <p className="text-ink-soft mb-4 text-[0.95rem]">
+              Encontramos cadastros parecidos com "{nome.trim()}". Algum deles é você?
+            </p>
+            {erro && <p className="text-danger-500 text-sm mb-4">{erro}</p>}
+            {candidatos.map((candidato) => (
+              <Button
+                key={candidato.id}
+                variant="option"
+                fullWidth
+                className="mb-2"
+                onClick={() => handleSelecionarCandidato(candidato)}
+                disabled={carregando}
+              >
+                {candidato.nome}
+                {candidato.turma ? ` — ${candidato.turma}` : ""}
+              </Button>
+            ))}
+            <Button fullWidth className="mt-4" onClick={handleContinuarComoNovo} disabled={carregando}>
+              Nenhum desses, sou novo aluno
+            </Button>
+            <Button
+              variant="secondary"
+              fullWidth
+              className="mt-3"
+              onClick={() => setEtapa("formulario")}
+              disabled={carregando}
+            >
+              Voltar
+            </Button>
+          </div>
+        )}
+      </Card>
+    </PageLayout>
   );
 }

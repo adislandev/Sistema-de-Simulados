@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #fbe9ce;
+  --color-primary-100: #f9ebda;
+  --color-primary-400: #f39200;
+  --color-primary-500: #ef8100;
+  --color-primary-600: #d97200;
+  --color-primary-700: #b35d00;
+
+  --color-surface: #ffffff;
+  --color-bg: #fef9f2;
+  --color-ink: #242424;
+  --color-ink-soft: #6d6d6c;
+
+  --color-success-500: #22c55e;
+  --color-success-700: #15803d;
+  --color-danger-500: #e5484d;
+  --color-danger-700: #a52834;
+
+  --font-sans:
+    "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-md: 12px;
+  --radius-chunky: 16px;
+  --shadow-card:
+    0 1px 2px rgba(16, 20, 30, 0.06), 0 4px 16px rgba(16, 20, 30, 0.06);
+}
+
+/*
+  Alias temporário: variáveis antigas (--cor-*) apontando para os tokens novos,
+  para telas ainda não migradas continuarem funcionando sem alteração.
+  Remover junto com legacy.css ao final da Fase 6/7.
+*/
+:root {
+  --cor-fundo: var(--color-bg);
+  --cor-superficie: var(--color-surface);
+  --cor-texto: var(--color-ink);
+  --cor-texto-suave: var(--color-ink-soft);
+  --cor-primaria: var(--color-primary-500);
+  --cor-primaria-hover: var(--color-primary-600);
+  --cor-sucesso: var(--color-success-500);
+  --cor-erro: var(--color-danger-500);
+  --raio: var(--radius-md);
+  --sombra: var(--shadow-card);
+  --fonte: var(--font-sans);
+}

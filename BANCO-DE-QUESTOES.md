@@ -133,8 +133,25 @@ E)  Erro
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo lê dois números, calcula a soma e mostra "Acima" quando a
-soma é maior que 14. Se forem informados 8 e 7, o resultado será:
+Considere o algoritmo:
+
+``` text
+algoritmo "SomaAcima"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma > 14 entao
+    escreva("Acima")
+  senao
+    escreva("Abaixo")
+  fimse
+fimalgoritmo
+```
+
+Se forem informados 8 e 7, qual será o resultado?
 
 A)  Acima\
 B)  Abaixo\
@@ -152,8 +169,22 @@ E)  Nenhuma
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo inicia `soma` em 0 e repete 3 vezes a operação
-`soma <- soma + 5`. Qual será o resultado final?
+Observe o algoritmo:
+
+``` text
+algoritmo "RepeteSoma5"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    soma <- soma + 5
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado final?
 
 A)  5\
 B)  10\
@@ -171,8 +202,25 @@ E)  3
 -   dificuldade: média
 
 **Enunciado:**\
-Um algoritmo calcula `soma <- a + b` e verifica se `soma >= 12`. Para os
-valores 5 e 7, qual mensagem deve ser apresentada?
+Considere:
+
+``` text
+algoritmo "VerificaSoma12"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma >= 12 entao
+    escreva("Soma alta")
+  senao
+    escreva("Soma baixa")
+  fimse
+fimalgoritmo
+```
+
+Para os valores 5 e 7, qual mensagem deve ser apresentada?
 
 A)  Soma alta\
 B)  Soma baixa\
@@ -191,8 +239,22 @@ E)  Nenhuma
 -   dificuldade: média
 
 **Enunciado:**\
-Um algoritmo inicia `soma` em 0 e repete 4 vezes a operação
-`soma <- soma + 2`. Qual será o resultado?
+Analise o algoritmo a seguir:
+
+``` text
+algoritmo "RepeteSoma2"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 4 faca
+    soma <- soma + 2
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado?
 
 A)  2\
 B)  4\
@@ -210,9 +272,23 @@ E)  10
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo soma 10 e 3. Se a soma for maior que 8, apresenta "Maior
-que 8"; caso contrário, apresenta "Menor ou igual a 8". Qual será a
-saída?
+Considere o algoritmo:
+
+``` text
+algoritmo "TesteSoma8"
+var
+  soma: inteiro
+inicio
+  soma <- 10 + 3
+  se soma > 8 entao
+    escreva("Maior que 8")
+  senao
+    escreva("Menor ou igual a 8")
+  fimse
+fimalgoritmo
+```
+
+Qual será a saída?
 
 A)  Maior que 8\
 B)  Menor ou igual a 8\
@@ -230,8 +306,23 @@ E)  Nenhuma
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo lê três números: 4, 2 e 5, acumulando todos em uma variável
-`soma`. Qual será o resultado?
+Observe o algoritmo:
+
+``` text
+algoritmo "SomaTresValores"
+var
+  n, soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    leia(n)
+    soma <- soma + n
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 4, 2 e 5, qual será o resultado?
 
 A)  6\
 B)  9\
@@ -249,8 +340,24 @@ E)  15
 -   dificuldade: fácil
 
 **Enunciado:**\
-Uma variável `soma` começa em 0. Um laço executa 4 vezes e, em cada
-execução, acrescenta 2. Qual será o resultado?
+Considere o algoritmo:
+
+``` text
+algoritmo "LacoAcrescenta2"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  i <- 1
+  enquanto i <= 4 faca
+    soma <- soma + 2
+    i <- i + 1
+  fimenquanto
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado?
 
 A)  4\
 B)  6\
@@ -268,9 +375,23 @@ E)  12
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo verifica `se (n > 0)`. Caso seja verdadeiro, mostra
-"Positivo"; caso contrário, mostra "Negativo ou zero". Se `n = 0`, o
-resultado é:
+Analise o algoritmo a seguir:
+
+``` text
+algoritmo "VerificaPositivo"
+var
+  n: inteiro
+inicio
+  leia(n)
+  se n > 0 entao
+    escreva("Positivo")
+  senao
+    escreva("Negativo ou zero")
+  fimse
+fimalgoritmo
+```
+
+Se n = 0, qual será o resultado?
 
 A)  Positivo\
 B)  Negativo\
@@ -288,7 +409,22 @@ E)  Erro
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo soma 11 e 2 e mostra "Acima" se a soma for maior que 12.
+Considere:
+
+``` text
+algoritmo "TesteSoma12"
+var
+  soma: inteiro
+inicio
+  soma <- 11 + 2
+  se soma > 12 entao
+    escreva("Acima")
+  senao
+    escreva("Abaixo")
+  fimse
+fimalgoritmo
+```
+
 Qual será a saída?
 
 A)  Acima\
@@ -307,8 +443,23 @@ E)  Nenhuma
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo lê três valores: 1, 3 e 2, acumulando-os em `soma`. Qual
-será o resultado?
+Observe o algoritmo:
+
+``` text
+algoritmo "SomaTresValoresB"
+var
+  n, soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    leia(n)
+    soma <- soma + n
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 1, 3 e 2, qual será o resultado?
 
 A)  4\
 B)  5\
@@ -326,8 +477,25 @@ E)  8
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo soma dois números e testa `soma > 8`. Para os valores 4 e
-4, qual mensagem corresponde ao `senao`?
+Considere o algoritmo:
+
+``` text
+algoritmo "TesteSomaSenao"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma > 8 entao
+    escreva("Maior que 8")
+  senao
+    escreva("Menor ou igual a 8")
+  fimse
+fimalgoritmo
+```
+
+Para os valores 4 e 4, qual mensagem corresponde ao `senao`?
 
 A)  Maior que 8\
 B)  Menor ou igual a 8\
@@ -345,8 +513,24 @@ E)  Erro
 -   dificuldade: fácil
 
 **Enunciado:**\
-Uma variável `soma` começa em 0. Um laço executa 5 vezes e acrescenta 1
-a cada execução. Qual será o resultado?
+Analise o algoritmo a seguir:
+
+``` text
+algoritmo "LacoAcrescenta1"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  i <- 0
+  repita
+    soma <- soma + 1
+    i <- i + 1
+  ate i = 5
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado?
 
 A)  1\
 B)  4\
@@ -364,8 +548,21 @@ E)  10
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo lê dois números, soma os valores e mostra o resultado. Se
-forem informados 12 e 8, qual será a saída?
+Considere:
+
+``` text
+algoritmo "SomaDoisValores"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 12 e 8, qual será a saída?
 
 A)  18\
 B)  20\
@@ -384,8 +581,21 @@ E)  128
 -   dificuldade: média
 
 **Enunciado:**\
-Considere a condição `(n > 10) e (n > 14)`. Para `n = 15`, o resultado
-da condição é:
+Considere o algoritmo:
+
+``` text
+algoritmo "CondicaoComposta"
+var
+  n: inteiro
+  resultado: logico
+inicio
+  leia(n)
+  resultado <- (n > 10) e (n > 14)
+  escreva(resultado)
+fimalgoritmo
+```
+
+Para n = 15, qual é o resultado da condição?
 
 A)  Verdadeiro\
 B)  Falso\
@@ -404,8 +614,21 @@ E)  Indefinido
 -   dificuldade: média
 
 **Enunciado:**\
-Considere a condição `(n > 10) e (n > 14)`. Para `n = 10`, o resultado
-é:
+Observe o algoritmo:
+
+``` text
+algoritmo "CondicaoCompostaB"
+var
+  n: inteiro
+  resultado: logico
+inicio
+  leia(n)
+  resultado <- (n > 10) e (n > 14)
+  escreva(resultado)
+fimalgoritmo
+```
+
+Para n = 10, qual é o resultado da condição?
 
 A)  Verdadeiro\
 B)  Falso\
@@ -423,8 +646,25 @@ E)  Erro
 -   dificuldade: média
 
 **Enunciado:**\
-Um algoritmo calcula a soma de dois valores e mostra "Soma alta" somente
-quando `soma >= 15`. Para os valores 7 e 5, qual será a saída?
+Considere o algoritmo:
+
+``` text
+algoritmo "SomaAltaOuBaixa"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma >= 15 entao
+    escreva("Soma alta")
+  senao
+    escreva("Soma baixa")
+  fimse
+fimalgoritmo
+```
+
+Para os valores 7 e 5, qual será a saída?
 
 A)  Soma alta\
 B)  Soma baixa\
@@ -442,8 +682,23 @@ E)  Nenhuma
 -   dificuldade: fácil
 
 **Enunciado:**\
-Um algoritmo lê três valores: 2, 3 e 4, acumulando todos em uma variável
-`soma`. Qual será o resultado?
+Analise o algoritmo a seguir:
+
+``` text
+algoritmo "SomaTresValoresC"
+var
+  n, soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    leia(n)
+    soma <- soma + n
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 2, 3 e 4, qual será o resultado?
 
 A)  7\
 B)  8\

@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "../../../components/Button/Button";
+import Card from "../../../components/Card/Card";
+import Field from "../../../components/Field/Field";
+import PageLayout from "../../../components/PageLayout/PageLayout";
 import { supabase } from "../../../lib/supabaseClient";
 import { useSessaoProfessor } from "../useSessaoProfessor";
 
@@ -30,43 +34,39 @@ export default function Login() {
   }
 
   return (
-    <div className="pagina">
-      <div className="container">
-        <div className="cartao">
-          <h1 className="titulo-pagina">Painel do professor</h1>
-          <p className="subtitulo-pagina">Entre com sua conta para acessar os resultados.</p>
+    <PageLayout>
+      <Card>
+        <h1 className="text-2xl font-bold mb-1">Painel do professor</h1>
+        <p className="text-ink-soft mb-6 text-[0.95rem]">
+          Entre com sua conta para acessar os resultados.
+        </p>
 
-          <form onSubmit={entrar}>
-            <div className="campo">
-              <label htmlFor="email">E-mail</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoFocus
-              />
-            </div>
-            <div className="campo">
-              <label htmlFor="senha">Senha</label>
-              <input
-                id="senha"
-                type="password"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                required
-              />
-            </div>
+        <form onSubmit={entrar}>
+          <Field
+            label="E-mail"
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoFocus
+          />
+          <Field
+            label="Senha"
+            id="senha"
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
 
-            {erro && <p className="mensagem-erro">{erro}</p>}
+          {erro && <p className="text-danger-500 text-sm mb-4">{erro}</p>}
 
-            <button type="submit" className="botao botao-primario botao-bloco" disabled={enviando}>
-              {enviando ? "Entrando..." : "Entrar"}
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+          <Button type="submit" fullWidth disabled={enviando}>
+            {enviando ? "Entrando..." : "Entrar"}
+          </Button>
+        </form>
+      </Card>
+    </PageLayout>
   );
 }

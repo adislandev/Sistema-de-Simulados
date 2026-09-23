@@ -49,7 +49,7 @@ export default function Resultado() {
 
   useEffect(() => {
     if (!aluno || !simuladoId) {
-      navigate("/", { replace: true });
+      navigate("/", { replace: true, state: { proximoSimuladoId: simuladoId } });
       return;
     }
 
@@ -241,19 +241,23 @@ export default function Resultado() {
                 padding: "16px",
                 borderRadius: 8,
                 background: "var(--cor-fundo)",
-                display: "flex",
-                gap: 24,
-                flexWrap: "wrap",
               }}
             >
-              <div>
-                <div style={{ fontSize: "1.5rem", fontWeight: 700 }}>{formatarNota(mediaTresPrimeiras)}</div>
-                <div className="texto-suave" style={{ fontSize: "0.8rem" }}>Média das 3 primeiras notas</div>
+              <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontSize: "1.5rem", fontWeight: 700 }}>{formatarNota(mediaTresPrimeiras)}</div>
+                  <div className="texto-suave" style={{ fontSize: "0.8rem" }}>Média das 3 primeiras notas</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: "1.5rem", fontWeight: 700 }}>{formatarPontoExtra(pontoExtra)}</div>
+                  <div className="texto-suave" style={{ fontSize: "0.8rem" }}>Ponto extra (0 a 1)</div>
+                </div>
               </div>
-              <div>
-                <div style={{ fontSize: "1.5rem", fontWeight: 700 }}>{formatarPontoExtra(pontoExtra)}</div>
-                <div className="texto-suave" style={{ fontSize: "0.8rem" }}>Ponto extra</div>
-              </div>
+              <p className="texto-suave" style={{ marginTop: 12, marginBottom: 0 }}>
+                Este é o seu ponto extra final, calculado com as 3 primeiras tentativas. A partir de agora você
+                pode continuar respondendo este simulado livremente para treinar — as próximas tentativas não
+                alteram mais essa nota.
+              </p>
             </div>
           )}
 
@@ -299,9 +303,9 @@ export default function Resultado() {
             type="button"
             className="botao botao-primario botao-bloco"
             style={{ marginTop: 24 }}
-            onClick={() => navigate("/simulados")}
+            onClick={() => navigate(`/simulados/${simuladoId}/questao`)}
           >
-            Ver meus simulados
+            {atual.numero_tentativa < 3 ? `Fazer tentativa ${atual.numero_tentativa + 1} de 3` : "Treinar novamente"}
           </button>
         </div>
       </div>

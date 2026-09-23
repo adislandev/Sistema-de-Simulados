@@ -13,7 +13,7 @@ export default function Instrucoes() {
 
   useEffect(() => {
     if (!aluno || !simuladoId) {
-      navigate("/", { replace: true });
+      navigate("/", { replace: true, state: { proximoSimuladoId: simuladoId } });
       return;
     }
 

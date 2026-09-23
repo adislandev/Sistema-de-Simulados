@@ -160,8 +160,25 @@
     "competencia": "interpretar condição aplicada à soma",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo lê dois números, calcula a soma e mostra \"Acima\" quando a",
-      "soma é maior que 14. Se forem informados 8 e 7, o resultado será:"
+      "Considere o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"SomaAcima\"",
+      "var",
+      "  a, b, soma: inteiro",
+      "inicio",
+      "  leia(a)",
+      "  leia(b)",
+      "  soma <- a + b",
+      "  se soma > 14 entao",
+      "    escreva(\"Acima\")",
+      "  senao",
+      "    escreva(\"Abaixo\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se forem informados 8 e 7, qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -186,7 +203,7 @@
       }
     ],
     "resposta": "A",
-    "enunciado": "Um algoritmo lê dois números, calcula a soma e mostra \"Acima\" quando a\nsoma é maior que 14. Se forem informados 8 e 7, o resultado será:"
+    "enunciado": "Considere o algoritmo:\n\n``` text\nalgoritmo \"SomaAcima\"\nvar\n  a, b, soma: inteiro\ninicio\n  leia(a)\n  leia(b)\n  soma <- a + b\n  se soma > 14 entao\n    escreva(\"Acima\")\n  senao\n    escreva(\"Abaixo\")\n  fimse\nfimalgoritmo\n```\n\nSe forem informados 8 e 7, qual será o resultado?"
   },
   {
     "codigo": "LC-005",
@@ -196,8 +213,22 @@
     "competencia": "acompanhar repetição e acumulador",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo inicia `soma` em 0 e repete 3 vezes a operação",
-      "`soma <- soma + 5`. Qual será o resultado final?"
+      "Observe o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"RepeteSoma5\"",
+      "var",
+      "  soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  para i de 1 ate 3 faca",
+      "    soma <- soma + 5",
+      "  fimpara",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Qual será o resultado final?"
     ],
     "alternativas": [
       {
@@ -222,7 +253,7 @@
       }
     ],
     "resposta": "C",
-    "enunciado": "Um algoritmo inicia `soma` em 0 e repete 3 vezes a operação\n`soma <- soma + 5`. Qual será o resultado final?"
+    "enunciado": "Observe o algoritmo:\n\n``` text\nalgoritmo \"RepeteSoma5\"\nvar\n  soma, i: inteiro\ninicio\n  soma <- 0\n  para i de 1 ate 3 faca\n    soma <- soma + 5\n  fimpara\n  escreva(soma)\nfimalgoritmo\n```\n\nQual será o resultado final?"
   },
   {
     "codigo": "LC-006",
@@ -232,8 +263,25 @@
     "competencia": "avaliar condição após operação de soma",
     "dificuldade": "média",
     "enunciadoLinhas": [
-      "Um algoritmo calcula `soma <- a + b` e verifica se `soma >= 12`. Para os",
-      "valores 5 e 7, qual mensagem deve ser apresentada?"
+      "Considere:",
+      "",
+      "``` text",
+      "algoritmo \"VerificaSoma12\"",
+      "var",
+      "  a, b, soma: inteiro",
+      "inicio",
+      "  leia(a)",
+      "  leia(b)",
+      "  soma <- a + b",
+      "  se soma >= 12 entao",
+      "    escreva(\"Soma alta\")",
+      "  senao",
+      "    escreva(\"Soma baixa\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Para os valores 5 e 7, qual mensagem deve ser apresentada?"
     ],
     "alternativas": [
       {
@@ -258,7 +306,7 @@
       }
     ],
     "resposta": "A",
-    "enunciado": "Um algoritmo calcula `soma <- a + b` e verifica se `soma >= 12`. Para os\nvalores 5 e 7, qual mensagem deve ser apresentada?"
+    "enunciado": "Considere:\n\n``` text\nalgoritmo \"VerificaSoma12\"\nvar\n  a, b, soma: inteiro\ninicio\n  leia(a)\n  leia(b)\n  soma <- a + b\n  se soma >= 12 entao\n    escreva(\"Soma alta\")\n  senao\n    escreva(\"Soma baixa\")\n  fimse\nfimalgoritmo\n```\n\nPara os valores 5 e 7, qual mensagem deve ser apresentada?"
   },
   {
     "codigo": "LC-007",
@@ -268,8 +316,22 @@
     "competencia": "compreender repetição com quantidade definida de execuções",
     "dificuldade": "média",
     "enunciadoLinhas": [
-      "Um algoritmo inicia `soma` em 0 e repete 4 vezes a operação",
-      "`soma <- soma + 2`. Qual será o resultado?"
+      "Analise o algoritmo a seguir:",
+      "",
+      "``` text",
+      "algoritmo \"RepeteSoma2\"",
+      "var",
+      "  soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  para i de 1 ate 4 faca",
+      "    soma <- soma + 2",
+      "  fimpara",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -294,7 +356,7 @@
       }
     ],
     "resposta": "D",
-    "enunciado": "Um algoritmo inicia `soma` em 0 e repete 4 vezes a operação\n`soma <- soma + 2`. Qual será o resultado?"
+    "enunciado": "Analise o algoritmo a seguir:\n\n``` text\nalgoritmo \"RepeteSoma2\"\nvar\n  soma, i: inteiro\ninicio\n  soma <- 0\n  para i de 1 ate 4 faca\n    soma <- soma + 2\n  fimpara\n  escreva(soma)\nfimalgoritmo\n```\n\nQual será o resultado?"
   },
   {
     "codigo": "LC-008",
@@ -304,9 +366,23 @@
     "competencia": "interpretar condição sobre resultado de soma",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo soma 10 e 3. Se a soma for maior que 8, apresenta \"Maior",
-      "que 8\"; caso contrário, apresenta \"Menor ou igual a 8\". Qual será a",
-      "saída?"
+      "Considere o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"TesteSoma8\"",
+      "var",
+      "  soma: inteiro",
+      "inicio",
+      "  soma <- 10 + 3",
+      "  se soma > 8 entao",
+      "    escreva(\"Maior que 8\")",
+      "  senao",
+      "    escreva(\"Menor ou igual a 8\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Qual será a saída?"
     ],
     "alternativas": [
       {
@@ -331,7 +407,7 @@
       }
     ],
     "resposta": "A",
-    "enunciado": "Um algoritmo soma 10 e 3. Se a soma for maior que 8, apresenta \"Maior\nque 8\"; caso contrário, apresenta \"Menor ou igual a 8\". Qual será a\nsaída?"
+    "enunciado": "Considere o algoritmo:\n\n``` text\nalgoritmo \"TesteSoma8\"\nvar\n  soma: inteiro\ninicio\n  soma <- 10 + 3\n  se soma > 8 entao\n    escreva(\"Maior que 8\")\n  senao\n    escreva(\"Menor ou igual a 8\")\n  fimse\nfimalgoritmo\n```\n\nQual será a saída?"
   },
   {
     "codigo": "LC-009",
@@ -341,8 +417,23 @@
     "competencia": "rastrear soma de vários valores",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo lê três números: 4, 2 e 5, acumulando todos em uma variável",
-      "`soma`. Qual será o resultado?"
+      "Observe o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"SomaTresValores\"",
+      "var",
+      "  n, soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  para i de 1 ate 3 faca",
+      "    leia(n)",
+      "    soma <- soma + n",
+      "  fimpara",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se forem informados 4, 2 e 5, qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -367,7 +458,7 @@
       }
     ],
     "resposta": "C",
-    "enunciado": "Um algoritmo lê três números: 4, 2 e 5, acumulando todos em uma variável\n`soma`. Qual será o resultado?"
+    "enunciado": "Observe o algoritmo:\n\n``` text\nalgoritmo \"SomaTresValores\"\nvar\n  n, soma, i: inteiro\ninicio\n  soma <- 0\n  para i de 1 ate 3 faca\n    leia(n)\n    soma <- soma + n\n  fimpara\n  escreva(soma)\nfimalgoritmo\n```\n\nSe forem informados 4, 2 e 5, qual será o resultado?"
   },
   {
     "codigo": "LC-010",
@@ -377,8 +468,24 @@
     "competencia": "rastrear acumulador em repetição",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Uma variável `soma` começa em 0. Um laço executa 4 vezes e, em cada",
-      "execução, acrescenta 2. Qual será o resultado?"
+      "Considere o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"LacoAcrescenta2\"",
+      "var",
+      "  soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  i <- 1",
+      "  enquanto i <= 4 faca",
+      "    soma <- soma + 2",
+      "    i <- i + 1",
+      "  fimenquanto",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -403,7 +510,7 @@
       }
     ],
     "resposta": "C",
-    "enunciado": "Uma variável `soma` começa em 0. Um laço executa 4 vezes e, em cada\nexecução, acrescenta 2. Qual será o resultado?"
+    "enunciado": "Considere o algoritmo:\n\n``` text\nalgoritmo \"LacoAcrescenta2\"\nvar\n  soma, i: inteiro\ninicio\n  soma <- 0\n  i <- 1\n  enquanto i <= 4 faca\n    soma <- soma + 2\n    i <- i + 1\n  fimenquanto\n  escreva(soma)\nfimalgoritmo\n```\n\nQual será o resultado?"
   },
   {
     "codigo": "LC-011",
@@ -413,9 +520,23 @@
     "competencia": "interpretar condição com valor zero",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo verifica `se (n > 0)`. Caso seja verdadeiro, mostra",
-      "\"Positivo\"; caso contrário, mostra \"Negativo ou zero\". Se `n = 0`, o",
-      "resultado é:"
+      "Analise o algoritmo a seguir:",
+      "",
+      "``` text",
+      "algoritmo \"VerificaPositivo\"",
+      "var",
+      "  n: inteiro",
+      "inicio",
+      "  leia(n)",
+      "  se n > 0 entao",
+      "    escreva(\"Positivo\")",
+      "  senao",
+      "    escreva(\"Negativo ou zero\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se n = 0, qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -440,7 +561,7 @@
       }
     ],
     "resposta": "D",
-    "enunciado": "Um algoritmo verifica `se (n > 0)`. Caso seja verdadeiro, mostra\n\"Positivo\"; caso contrário, mostra \"Negativo ou zero\". Se `n = 0`, o\nresultado é:"
+    "enunciado": "Analise o algoritmo a seguir:\n\n``` text\nalgoritmo \"VerificaPositivo\"\nvar\n  n: inteiro\ninicio\n  leia(n)\n  se n > 0 entao\n    escreva(\"Positivo\")\n  senao\n    escreva(\"Negativo ou zero\")\n  fimse\nfimalgoritmo\n```\n\nSe n = 0, qual será o resultado?"
   },
   {
     "codigo": "LC-012",
@@ -450,7 +571,22 @@
     "competencia": "avaliar comparação com soma",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo soma 11 e 2 e mostra \"Acima\" se a soma for maior que 12.",
+      "Considere:",
+      "",
+      "``` text",
+      "algoritmo \"TesteSoma12\"",
+      "var",
+      "  soma: inteiro",
+      "inicio",
+      "  soma <- 11 + 2",
+      "  se soma > 12 entao",
+      "    escreva(\"Acima\")",
+      "  senao",
+      "    escreva(\"Abaixo\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
       "Qual será a saída?"
     ],
     "alternativas": [
@@ -476,7 +612,7 @@
       }
     ],
     "resposta": "A",
-    "enunciado": "Um algoritmo soma 11 e 2 e mostra \"Acima\" se a soma for maior que 12.\nQual será a saída?"
+    "enunciado": "Considere:\n\n``` text\nalgoritmo \"TesteSoma12\"\nvar\n  soma: inteiro\ninicio\n  soma <- 11 + 2\n  se soma > 12 entao\n    escreva(\"Acima\")\n  senao\n    escreva(\"Abaixo\")\n  fimse\nfimalgoritmo\n```\n\nQual será a saída?"
   },
   {
     "codigo": "LC-013",
@@ -486,8 +622,23 @@
     "competencia": "calcular soma acumulada em repetição",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo lê três valores: 1, 3 e 2, acumulando-os em `soma`. Qual",
-      "será o resultado?"
+      "Observe o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"SomaTresValoresB\"",
+      "var",
+      "  n, soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  para i de 1 ate 3 faca",
+      "    leia(n)",
+      "    soma <- soma + n",
+      "  fimpara",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se forem informados 1, 3 e 2, qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -512,7 +663,7 @@
       }
     ],
     "resposta": "C",
-    "enunciado": "Um algoritmo lê três valores: 1, 3 e 2, acumulando-os em `soma`. Qual\nserá o resultado?"
+    "enunciado": "Observe o algoritmo:\n\n``` text\nalgoritmo \"SomaTresValoresB\"\nvar\n  n, soma, i: inteiro\ninicio\n  soma <- 0\n  para i de 1 ate 3 faca\n    leia(n)\n    soma <- soma + n\n  fimpara\n  escreva(soma)\nfimalgoritmo\n```\n\nSe forem informados 1, 3 e 2, qual será o resultado?"
   },
   {
     "codigo": "LC-014",
@@ -522,8 +673,25 @@
     "competencia": "interpretar condição de maior que",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo soma dois números e testa `soma > 8`. Para os valores 4 e",
-      "4, qual mensagem corresponde ao `senao`?"
+      "Considere o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"TesteSomaSenao\"",
+      "var",
+      "  a, b, soma: inteiro",
+      "inicio",
+      "  leia(a)",
+      "  leia(b)",
+      "  soma <- a + b",
+      "  se soma > 8 entao",
+      "    escreva(\"Maior que 8\")",
+      "  senao",
+      "    escreva(\"Menor ou igual a 8\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Para os valores 4 e 4, qual mensagem corresponde ao `senao`?"
     ],
     "alternativas": [
       {
@@ -548,7 +716,7 @@
       }
     ],
     "resposta": "B",
-    "enunciado": "Um algoritmo soma dois números e testa `soma > 8`. Para os valores 4 e\n4, qual mensagem corresponde ao `senao`?"
+    "enunciado": "Considere o algoritmo:\n\n``` text\nalgoritmo \"TesteSomaSenao\"\nvar\n  a, b, soma: inteiro\ninicio\n  leia(a)\n  leia(b)\n  soma <- a + b\n  se soma > 8 entao\n    escreva(\"Maior que 8\")\n  senao\n    escreva(\"Menor ou igual a 8\")\n  fimse\nfimalgoritmo\n```\n\nPara os valores 4 e 4, qual mensagem corresponde ao `senao`?"
   },
   {
     "codigo": "LC-015",
@@ -558,8 +726,24 @@
     "competencia": "acompanhar incremento em repetição",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Uma variável `soma` começa em 0. Um laço executa 5 vezes e acrescenta 1",
-      "a cada execução. Qual será o resultado?"
+      "Analise o algoritmo a seguir:",
+      "",
+      "``` text",
+      "algoritmo \"LacoAcrescenta1\"",
+      "var",
+      "  soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  i <- 0",
+      "  repita",
+      "    soma <- soma + 1",
+      "    i <- i + 1",
+      "  ate i = 5",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -584,7 +768,7 @@
       }
     ],
     "resposta": "C",
-    "enunciado": "Uma variável `soma` começa em 0. Um laço executa 5 vezes e acrescenta 1\na cada execução. Qual será o resultado?"
+    "enunciado": "Analise o algoritmo a seguir:\n\n``` text\nalgoritmo \"LacoAcrescenta1\"\nvar\n  soma, i: inteiro\ninicio\n  soma <- 0\n  i <- 0\n  repita\n    soma <- soma + 1\n    i <- i + 1\n  ate i = 5\n  escreva(soma)\nfimalgoritmo\n```\n\nQual será o resultado?"
   },
   {
     "codigo": "LC-016",
@@ -594,8 +778,21 @@
     "competencia": "compreender leitura e soma de dois valores",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo lê dois números, soma os valores e mostra o resultado. Se",
-      "forem informados 12 e 8, qual será a saída?"
+      "Considere:",
+      "",
+      "``` text",
+      "algoritmo \"SomaDoisValores\"",
+      "var",
+      "  a, b, soma: inteiro",
+      "inicio",
+      "  leia(a)",
+      "  leia(b)",
+      "  soma <- a + b",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se forem informados 12 e 8, qual será a saída?"
     ],
     "alternativas": [
       {
@@ -620,7 +817,7 @@
       }
     ],
     "resposta": "B",
-    "enunciado": "Um algoritmo lê dois números, soma os valores e mostra o resultado. Se\nforem informados 12 e 8, qual será a saída?"
+    "enunciado": "Considere:\n\n``` text\nalgoritmo \"SomaDoisValores\"\nvar\n  a, b, soma: inteiro\ninicio\n  leia(a)\n  leia(b)\n  soma <- a + b\n  escreva(soma)\nfimalgoritmo\n```\n\nSe forem informados 12 e 8, qual será a saída?"
   },
   {
     "codigo": "LC-017",
@@ -630,8 +827,21 @@
     "competencia": "avaliar duas condições simultaneamente",
     "dificuldade": "média",
     "enunciadoLinhas": [
-      "Considere a condição `(n > 10) e (n > 14)`. Para `n = 15`, o resultado",
-      "da condição é:"
+      "Considere o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"CondicaoComposta\"",
+      "var",
+      "  n: inteiro",
+      "  resultado: logico",
+      "inicio",
+      "  leia(n)",
+      "  resultado <- (n > 10) e (n > 14)",
+      "  escreva(resultado)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Para n = 15, qual é o resultado da condição?"
     ],
     "alternativas": [
       {
@@ -656,7 +866,7 @@
       }
     ],
     "resposta": "A",
-    "enunciado": "Considere a condição `(n > 10) e (n > 14)`. Para `n = 15`, o resultado\nda condição é:"
+    "enunciado": "Considere o algoritmo:\n\n``` text\nalgoritmo \"CondicaoComposta\"\nvar\n  n: inteiro\n  resultado: logico\ninicio\n  leia(n)\n  resultado <- (n > 10) e (n > 14)\n  escreva(resultado)\nfimalgoritmo\n```\n\nPara n = 15, qual é o resultado da condição?"
   },
   {
     "codigo": "LC-018",
@@ -666,8 +876,21 @@
     "competencia": "avaliar duas condições simultaneamente",
     "dificuldade": "média",
     "enunciadoLinhas": [
-      "Considere a condição `(n > 10) e (n > 14)`. Para `n = 10`, o resultado",
-      "é:"
+      "Observe o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"CondicaoCompostaB\"",
+      "var",
+      "  n: inteiro",
+      "  resultado: logico",
+      "inicio",
+      "  leia(n)",
+      "  resultado <- (n > 10) e (n > 14)",
+      "  escreva(resultado)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Para n = 10, qual é o resultado da condição?"
     ],
     "alternativas": [
       {
@@ -692,7 +915,7 @@
       }
     ],
     "resposta": "B",
-    "enunciado": "Considere a condição `(n > 10) e (n > 14)`. Para `n = 10`, o resultado\né:"
+    "enunciado": "Observe o algoritmo:\n\n``` text\nalgoritmo \"CondicaoCompostaB\"\nvar\n  n: inteiro\n  resultado: logico\ninicio\n  leia(n)\n  resultado <- (n > 10) e (n > 14)\n  escreva(resultado)\nfimalgoritmo\n```\n\nPara n = 10, qual é o resultado da condição?"
   },
   {
     "codigo": "LC-019",
@@ -702,8 +925,25 @@
     "competencia": "interpretar limite de comparação",
     "dificuldade": "média",
     "enunciadoLinhas": [
-      "Um algoritmo calcula a soma de dois valores e mostra \"Soma alta\" somente",
-      "quando `soma >= 15`. Para os valores 7 e 5, qual será a saída?"
+      "Considere o algoritmo:",
+      "",
+      "``` text",
+      "algoritmo \"SomaAltaOuBaixa\"",
+      "var",
+      "  a, b, soma: inteiro",
+      "inicio",
+      "  leia(a)",
+      "  leia(b)",
+      "  soma <- a + b",
+      "  se soma >= 15 entao",
+      "    escreva(\"Soma alta\")",
+      "  senao",
+      "    escreva(\"Soma baixa\")",
+      "  fimse",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Para os valores 7 e 5, qual será a saída?"
     ],
     "alternativas": [
       {
@@ -728,7 +968,7 @@
       }
     ],
     "resposta": "B",
-    "enunciado": "Um algoritmo calcula a soma de dois valores e mostra \"Soma alta\" somente\nquando `soma >= 15`. Para os valores 7 e 5, qual será a saída?"
+    "enunciado": "Considere o algoritmo:\n\n``` text\nalgoritmo \"SomaAltaOuBaixa\"\nvar\n  a, b, soma: inteiro\ninicio\n  leia(a)\n  leia(b)\n  soma <- a + b\n  se soma >= 15 entao\n    escreva(\"Soma alta\")\n  senao\n    escreva(\"Soma baixa\")\n  fimse\nfimalgoritmo\n```\n\nPara os valores 7 e 5, qual será a saída?"
   },
   {
     "codigo": "LC-020",
@@ -738,8 +978,23 @@
     "competencia": "acompanhar soma de três entradas",
     "dificuldade": "fácil",
     "enunciadoLinhas": [
-      "Um algoritmo lê três valores: 2, 3 e 4, acumulando todos em uma variável",
-      "`soma`. Qual será o resultado?"
+      "Analise o algoritmo a seguir:",
+      "",
+      "``` text",
+      "algoritmo \"SomaTresValoresC\"",
+      "var",
+      "  n, soma, i: inteiro",
+      "inicio",
+      "  soma <- 0",
+      "  para i de 1 ate 3 faca",
+      "    leia(n)",
+      "    soma <- soma + n",
+      "  fimpara",
+      "  escreva(soma)",
+      "fimalgoritmo",
+      "```",
+      "",
+      "Se forem informados 2, 3 e 4, qual será o resultado?"
     ],
     "alternativas": [
       {
@@ -764,7 +1019,7 @@
       }
     ],
     "resposta": "C",
-    "enunciado": "Um algoritmo lê três valores: 2, 3 e 4, acumulando todos em uma variável\n`soma`. Qual será o resultado?"
+    "enunciado": "Analise o algoritmo a seguir:\n\n``` text\nalgoritmo \"SomaTresValoresC\"\nvar\n  n, soma, i: inteiro\ninicio\n  soma <- 0\n  para i de 1 ate 3 faca\n    leia(n)\n    soma <- soma + n\n  fimpara\n  escreva(soma)\nfimalgoritmo\n```\n\nSe forem informados 2, 3 e 4, qual será o resultado?"
   },
   {
     "codigo": "ERG-001",

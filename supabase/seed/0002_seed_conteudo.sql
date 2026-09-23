@@ -105,42 +105,297 @@ fimalgoritmo
 ```
 
 Entrada: -2.', 'IDENTICA_PROVA', 'fácil', 'Prova N1 --- Questão 6');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-004'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição aplicada à soma'), 'LC-004', 'Um algoritmo lê dois números, calcula a soma e mostra "Acima" quando a
-soma é maior que 14. Se forem informados 8 e 7, o resultado será:', 'ADAPTADA_PROVA', 'fácil', 'baseada nas Questões 2 e 7 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-005'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::acompanhar repetição e acumulador'), 'LC-005', 'Um algoritmo inicia `soma` em 0 e repete 3 vezes a operação
-`soma <- soma + 5`. Qual será o resultado final?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 5 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-006'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar condição após operação de soma'), 'LC-006', 'Um algoritmo calcula `soma <- a + b` e verifica se `soma >= 12`. Para os
-valores 5 e 7, qual mensagem deve ser apresentada?', 'ADAPTADA_PROVA', 'média', 'baseada na Questão 2 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-007'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::compreender repetição com quantidade definida de execuções'), 'LC-007', 'Um algoritmo inicia `soma` em 0 e repete 4 vezes a operação
-`soma <- soma + 2`. Qual será o resultado?', 'ADAPTADA_PROVA', 'média', 'baseada nas Questões 5 e 8 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-008'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição sobre resultado de soma'), 'LC-008', 'Um algoritmo soma 10 e 3. Se a soma for maior que 8, apresenta "Maior
-que 8"; caso contrário, apresenta "Menor ou igual a 8". Qual será a
-saída?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 4 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-009'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::rastrear soma de vários valores'), 'LC-009', 'Um algoritmo lê três números: 4, 2 e 5, acumulando todos em uma variável
-`soma`. Qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 8 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-010'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::rastrear acumulador em repetição'), 'LC-010', 'Uma variável `soma` começa em 0. Um laço executa 4 vezes e, em cada
-execução, acrescenta 2. Qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 5 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-011'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição com valor zero'), 'LC-011', 'Um algoritmo verifica `se (n > 0)`. Caso seja verdadeiro, mostra
-"Positivo"; caso contrário, mostra "Negativo ou zero". Se `n = 0`, o
-resultado é:', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 6 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-012'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar comparação com soma'), 'LC-012', 'Um algoritmo soma 11 e 2 e mostra "Acima" se a soma for maior que 12.
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-004'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição aplicada à soma'), 'LC-004', 'Considere o algoritmo:
+
+``` text
+algoritmo "SomaAcima"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma > 14 entao
+    escreva("Acima")
+  senao
+    escreva("Abaixo")
+  fimse
+fimalgoritmo
+```
+
+Se forem informados 8 e 7, qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada nas Questões 2 e 7 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-005'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::acompanhar repetição e acumulador'), 'LC-005', 'Observe o algoritmo:
+
+``` text
+algoritmo "RepeteSoma5"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    soma <- soma + 5
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado final?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 5 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-006'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar condição após operação de soma'), 'LC-006', 'Considere:
+
+``` text
+algoritmo "VerificaSoma12"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma >= 12 entao
+    escreva("Soma alta")
+  senao
+    escreva("Soma baixa")
+  fimse
+fimalgoritmo
+```
+
+Para os valores 5 e 7, qual mensagem deve ser apresentada?', 'ADAPTADA_PROVA', 'média', 'baseada na Questão 2 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-007'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::compreender repetição com quantidade definida de execuções'), 'LC-007', 'Analise o algoritmo a seguir:
+
+``` text
+algoritmo "RepeteSoma2"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 4 faca
+    soma <- soma + 2
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado?', 'ADAPTADA_PROVA', 'média', 'baseada nas Questões 5 e 8 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-008'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição sobre resultado de soma'), 'LC-008', 'Considere o algoritmo:
+
+``` text
+algoritmo "TesteSoma8"
+var
+  soma: inteiro
+inicio
+  soma <- 10 + 3
+  se soma > 8 entao
+    escreva("Maior que 8")
+  senao
+    escreva("Menor ou igual a 8")
+  fimse
+fimalgoritmo
+```
+
+Qual será a saída?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 4 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-009'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::rastrear soma de vários valores'), 'LC-009', 'Observe o algoritmo:
+
+``` text
+algoritmo "SomaTresValores"
+var
+  n, soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    leia(n)
+    soma <- soma + n
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 4, 2 e 5, qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 8 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-010'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::rastrear acumulador em repetição'), 'LC-010', 'Considere o algoritmo:
+
+``` text
+algoritmo "LacoAcrescenta2"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  i <- 1
+  enquanto i <= 4 faca
+    soma <- soma + 2
+    i <- i + 1
+  fimenquanto
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 5 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-011'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição com valor zero'), 'LC-011', 'Analise o algoritmo a seguir:
+
+``` text
+algoritmo "VerificaPositivo"
+var
+  n: inteiro
+inicio
+  leia(n)
+  se n > 0 entao
+    escreva("Positivo")
+  senao
+    escreva("Negativo ou zero")
+  fimse
+fimalgoritmo
+```
+
+Se n = 0, qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 6 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-012'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar comparação com soma'), 'LC-012', 'Considere:
+
+``` text
+algoritmo "TesteSoma12"
+var
+  soma: inteiro
+inicio
+  soma <- 11 + 2
+  se soma > 12 entao
+    escreva("Acima")
+  senao
+    escreva("Abaixo")
+  fimse
+fimalgoritmo
+```
+
 Qual será a saída?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 7 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-013'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::calcular soma acumulada em repetição'), 'LC-013', 'Um algoritmo lê três valores: 1, 3 e 2, acumulando-os em `soma`. Qual
-será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 8 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-014'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição de maior que'), 'LC-014', 'Um algoritmo soma dois números e testa `soma > 8`. Para os valores 4 e
-4, qual mensagem corresponde ao `senao`?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 4 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-015'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::acompanhar incremento em repetição'), 'LC-015', 'Uma variável `soma` começa em 0. Um laço executa 5 vezes e acrescenta 1
-a cada execução. Qual será o resultado?', 'NOVA_MESMO_CONTEUDO', 'fácil', 'mesmo conteúdo das estruturas de repetição da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-016'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::compreender leitura e soma de dois valores'), 'LC-016', 'Um algoritmo lê dois números, soma os valores e mostra o resultado. Se
-forem informados 12 e 8, qual será a saída?', 'NOVA_MESMO_CONTEUDO', 'fácil', 'mesmo conteúdo de soma da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-017'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar duas condições simultaneamente'), 'LC-017', 'Considere a condição `(n > 10) e (n > 14)`. Para `n = 15`, o resultado
-da condição é:', 'NOVA_MESMO_CONTEUDO', 'média', 'mesmo conteúdo de condição com operador E da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-018'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar duas condições simultaneamente'), 'LC-018', 'Considere a condição `(n > 10) e (n > 14)`. Para `n = 10`, o resultado
-é:', 'NOVA_MESMO_CONTEUDO', 'média', 'mesmo conteúdo de condição com operador E da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-019'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar limite de comparação'), 'LC-019', 'Um algoritmo calcula a soma de dois valores e mostra "Soma alta" somente
-quando `soma >= 15`. Para os valores 7 e 5, qual será a saída?', 'ADAPTADA_PROVA', 'média', 'baseada na Questão 2 da prova');
-insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-020'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::acompanhar soma de três entradas'), 'LC-020', 'Um algoritmo lê três valores: 2, 3 e 4, acumulando todos em uma variável
-`soma`. Qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 8 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-013'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::calcular soma acumulada em repetição'), 'LC-013', 'Observe o algoritmo:
+
+``` text
+algoritmo "SomaTresValoresB"
+var
+  n, soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    leia(n)
+    soma <- soma + n
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 1, 3 e 2, qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 8 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-014'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar condição de maior que'), 'LC-014', 'Considere o algoritmo:
+
+``` text
+algoritmo "TesteSomaSenao"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma > 8 entao
+    escreva("Maior que 8")
+  senao
+    escreva("Menor ou igual a 8")
+  fimse
+fimalgoritmo
+```
+
+Para os valores 4 e 4, qual mensagem corresponde ao `senao`?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 4 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-015'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::acompanhar incremento em repetição'), 'LC-015', 'Analise o algoritmo a seguir:
+
+``` text
+algoritmo "LacoAcrescenta1"
+var
+  soma, i: inteiro
+inicio
+  soma <- 0
+  i <- 0
+  repita
+    soma <- soma + 1
+    i <- i + 1
+  ate i = 5
+  escreva(soma)
+fimalgoritmo
+```
+
+Qual será o resultado?', 'NOVA_MESMO_CONTEUDO', 'fácil', 'mesmo conteúdo das estruturas de repetição da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-016'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::compreender leitura e soma de dois valores'), 'LC-016', 'Considere:
+
+``` text
+algoritmo "SomaDoisValores"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 12 e 8, qual será a saída?', 'NOVA_MESMO_CONTEUDO', 'fácil', 'mesmo conteúdo de soma da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-017'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar duas condições simultaneamente'), 'LC-017', 'Considere o algoritmo:
+
+``` text
+algoritmo "CondicaoComposta"
+var
+  n: inteiro
+  resultado: logico
+inicio
+  leia(n)
+  resultado <- (n > 10) e (n > 14)
+  escreva(resultado)
+fimalgoritmo
+```
+
+Para n = 15, qual é o resultado da condição?', 'NOVA_MESMO_CONTEUDO', 'média', 'mesmo conteúdo de condição com operador E da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-018'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::avaliar duas condições simultaneamente'), 'LC-018', 'Observe o algoritmo:
+
+``` text
+algoritmo "CondicaoCompostaB"
+var
+  n: inteiro
+  resultado: logico
+inicio
+  leia(n)
+  resultado <- (n > 10) e (n > 14)
+  escreva(resultado)
+fimalgoritmo
+```
+
+Para n = 10, qual é o resultado da condição?', 'NOVA_MESMO_CONTEUDO', 'média', 'mesmo conteúdo de condição com operador E da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-019'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::interpretar limite de comparação'), 'LC-019', 'Considere o algoritmo:
+
+``` text
+algoritmo "SomaAltaOuBaixa"
+var
+  a, b, soma: inteiro
+inicio
+  leia(a)
+  leia(b)
+  soma <- a + b
+  se soma >= 15 entao
+    escreva("Soma alta")
+  senao
+    escreva("Soma baixa")
+  fimse
+fimalgoritmo
+```
+
+Para os valores 7 e 5, qual será a saída?', 'ADAPTADA_PROVA', 'média', 'baseada na Questão 2 da prova');
+insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:LC-020'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:logica-computacional'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:logica-computacional::acompanhar soma de três entradas'), 'LC-020', 'Analise o algoritmo a seguir:
+
+``` text
+algoritmo "SomaTresValoresC"
+var
+  n, soma, i: inteiro
+inicio
+  soma <- 0
+  para i de 1 ate 3 faca
+    leia(n)
+    soma <- soma + n
+  fimpara
+  escreva(soma)
+fimalgoritmo
+```
+
+Se forem informados 2, 3 e 4, qual será o resultado?', 'ADAPTADA_PROVA', 'fácil', 'baseada na Questão 8 da prova');
 insert into questoes (id, disciplina_id, competencia_id, codigo, enunciado, tipo, dificuldade, origem) values (uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'questao:ERG-001'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'disciplina:ergonomia-ihc'), uuid_generate_v5('c53a3f0a-2b1e-4c2e-9d0e-9a2f6b5a2d10'::uuid, 'competencia:ergonomia-ihc::identificar eficiência segundo ISO 9241-11'), 'ERG-001', 'Um aluno desenvolveu um protótipo no Figma e percebeu que os usuários
 conseguem concluir tarefas, mas com dificuldade e demora. Segundo a NBR
 ISO 9241-11, isso indica problema em qual aspecto da usabilidade?', 'IDENTICA_PROVA', 'fácil', 'Prova N1 --- Questão 1');
