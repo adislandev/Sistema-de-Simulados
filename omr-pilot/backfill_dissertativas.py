@@ -20,9 +20,7 @@ from pathlib import Path
 from googleapiclient.discovery import build
 
 sys.path.insert(0, str(Path(__file__).parent))
-from omr.dissertativa_pipeline import avaliar_dissertativas_da_prova  # noqa: E402
 from omr.roster import buscar_por_nome, carregar_lista_chamada  # noqa: E402
-from omr.supabase_writer import gravar_sugestao_dissertativa  # noqa: E402
 from processar_pasta import (  # noqa: E402
     ARQUIVO_LISTA_CHAMADA,
     LISTA_CHAMADA_CSV,
@@ -32,6 +30,7 @@ from processar_pasta import (  # noqa: E402
     _baixar_pdf,
     _credenciais,
     _renderizar_paginas,
+    avaliar_e_gravar_dissertativas,
 )
 
 
@@ -60,21 +59,7 @@ def main() -> None:
         pdf_bytes = _baixar_pdf(drive, arquivo["id"])
         paginas = _renderizar_paginas(pdf_bytes)
 
-        nota_sugerida, dissertativas_ia = avaliar_dissertativas_da_prova(paginas)
-        gravar_sugestao_dissertativa(
-            ra=aluno.ra,
-            prova_tipo=PROVA_TIPO_PADRAO,
-            nota_sugerida_total=nota_sugerida,
-            dissertativas_ia=dissertativas_ia,
-        )
-        print(f"  Paginas renderizadas: {len(paginas)}  Dissertativas detectadas: {len(dissertativas_ia)}")
-        for d in dissertativas_ia:
-            print(
-                f"    Q{d['questao']}: pendente={d.get('pendente_revisao_manual')} "
-                f"nota={d.get('nota_sugerida_total')} obs={d.get('observacao')!r} "
-                f"transcricao={str(d.get('transcricao', ''))[:80]!r}"
-            )
-        print(f"  Sugestao gravada (nota sugerida: {nota_sugerida}).")
+        avaliar_e_gravar_dissertativas(paginas, aluno.ra)
         ras_alvo.discard(aluno.ra)
 
     if ras_alvo:

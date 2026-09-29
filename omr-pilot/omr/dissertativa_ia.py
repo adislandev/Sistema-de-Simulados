@@ -28,7 +28,8 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-import requests
+
+from .http_retry import requisitar
 
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 DEEPSEEK_MODEL = "deepseek-flash"
@@ -169,7 +170,8 @@ def avaliar_dissertativa(
         ],
     }
 
-    resposta = requests.post(
+    resposta = requisitar(
+        "POST",
         DEEPSEEK_URL,
         headers={
             "Authorization": f"Bearer {chave}",
@@ -178,6 +180,5 @@ def avaliar_dissertativa(
         json=corpo,
         timeout=60,
     )
-    resposta.raise_for_status()
     conteudo = resposta.json()["choices"][0]["message"]["content"]
     return _parsear_resposta(conteudo)
