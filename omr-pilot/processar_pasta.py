@@ -28,11 +28,12 @@ from googleapiclient.http import MediaIoBaseDownload
 
 sys.path.insert(0, str(Path(__file__).parent))
 from omr.avaliacao import calcular_nota_objetiva  # noqa: E402
+from omr.dissertativa_pipeline import avaliar_dissertativas_da_prova  # noqa: E402
 from omr.gabarito import extrair_respostas_corretas, obter_texto_documento  # noqa: E402
 from omr.grade_detector import NUM_QUESTOES, ler_respostas  # noqa: E402
 from omr.roster import buscar_por_nome, carregar_lista_chamada  # noqa: E402
 from omr.sheets_writer import adicionar_linha, montar_linha  # noqa: E402
-from omr.supabase_writer import gravar_resultado  # noqa: E402
+from omr.supabase_writer import gravar_resultado, gravar_sugestao_dissertativa  # noqa: E402
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive.readonly",
@@ -83,12 +84,15 @@ def _baixar_pdf(drive, file_id: str) -> bytes:
     return buf.getvalue()
 
 
-def _renderizar_primeira_pagina(pdf_bytes: bytes) -> np.ndarray:
+def _renderizar_paginas(pdf_bytes: bytes) -> list[np.ndarray]:
     doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
-    pixmap = doc[0].get_pixmap(dpi=DPI_RENDER)
-    imagem_png = pixmap.tobytes("png")
-    array = np.frombuffer(imagem_png, dtype=np.uint8)
-    return cv2.imdecode(array, cv2.IMREAD_COLOR)
+    paginas = []
+    for pagina in doc:
+        pixmap = pagina.get_pixmap(dpi=DPI_RENDER)
+        imagem_png = pixmap.tobytes("png")
+        array = np.frombuffer(imagem_png, dtype=np.uint8)
+        paginas.append(cv2.imdecode(array, cv2.IMREAD_COLOR))
+    return paginas
 
 
 def main() -> None:
@@ -122,7 +126,8 @@ def main() -> None:
 
         houve_pendente = True
         pdf_bytes = _baixar_pdf(drive, arquivo["id"])
-        imagem = _renderizar_primeira_pagina(pdf_bytes)
+        paginas = _renderizar_paginas(pdf_bytes)
+        imagem = paginas[0]
 
         try:
             resultados = ler_respostas(imagem)
@@ -167,6 +172,21 @@ def main() -> None:
             print("  Gravado no Supabase (painel do professor).")
         except Exception as erro:  # nao interrompe o pipeline se o Supabase falhar - a planilha ja foi gravada
             print(f"  AVISO: falha ao gravar no Supabase: {erro}")
+
+        if not os.environ.get("DEEPSEEK_API_KEY"):
+            print("  DEEPSEEK_API_KEY nao definida - pulando sugestao de IA para as dissertativas.")
+        else:
+            try:
+                nota_sugerida, dissertativas_ia = avaliar_dissertativas_da_prova(paginas)
+                gravar_sugestao_dissertativa(
+                    ra=aluno.ra,
+                    prova_tipo=PROVA_TIPO_PADRAO,
+                    nota_sugerida_total=nota_sugerida,
+                    dissertativas_ia=dissertativas_ia,
+                )
+                print(f"  Sugestao de IA para as dissertativas gravada (nota sugerida: {nota_sugerida}).")
+            except Exception as erro:  # nao interrompe o pipeline - a nota objetiva ja foi gravada
+                print(f"  AVISO: falha ao avaliar/gravar sugestao das dissertativas: {erro}")
 
     if not houve_pendente:
         print("\nNenhuma prova nova para corrigir (todas ja estavam na planilha).")
