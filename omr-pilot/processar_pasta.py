@@ -54,21 +54,12 @@ def _credenciais(scopes: list[str]) -> service_account.Credentials:
     return service_account.Credentials.from_service_account_file(caminho, scopes=scopes)
 
 
-def _listar_provas_pendentes(drive, ja_processados: set[str]) -> list[dict]:
+def _listar_provas(drive) -> list[dict]:
     resp = drive.files().list(
         q=f"'{PASTA_ALUNOS_ID}' in parents and mimeType='application/pdf'",
         fields="files(id,name)",
     ).execute()
-    pendentes = []
-    for arquivo in resp.get("files", []):
-        nome_arquivo = arquivo["name"]
-        if nome_arquivo == ARQUIVO_LISTA_CHAMADA:
-            continue
-        nome_base = Path(nome_arquivo).stem
-        if nome_base.strip().upper() in ja_processados:
-            continue
-        pendentes.append(arquivo)
-    return pendentes
+    return [a for a in resp.get("files", []) if a["name"] != ARQUIVO_LISTA_CHAMADA]
 
 
 def _nomes_ja_na_planilha(spreadsheet_id: str, creds) -> set[str]:
@@ -103,25 +94,31 @@ def main() -> None:
     drive = build("drive", "v3", credentials=creds)
 
     ja_processados = _nomes_ja_na_planilha(SPREADSHEET_ID, creds)
-    pendentes = _listar_provas_pendentes(drive, ja_processados)
+    provas = _listar_provas(drive)
 
-    if not pendentes:
-        print("Nenhuma prova nova para corrigir.")
+    if not provas:
+        print("Nenhuma prova encontrada na pasta.")
         return
 
     alunos = carregar_lista_chamada(LISTA_CHAMADA_CSV)
     gabarito_texto = obter_texto_documento(os.environ["GOOGLE_APPLICATION_CREDENTIALS"], GABARITO_DOC_ID)
     gabarito = extrair_respostas_corretas(gabarito_texto, NUM_QUESTOES)
 
-    for arquivo in pendentes:
+    houve_pendente = False
+    for arquivo in provas:
         nome_prova = Path(arquivo["name"]).stem
-        print(f"\n=== Processando: {arquivo['name']} ===")
+        print(f"\n=== {arquivo['name']} ===")
 
         aluno, score = buscar_por_nome(nome_prova, alunos)
         if aluno is None:
             print(f"  AVISO: nao encontrei '{nome_prova}' na lista de chamada (score {score:.2f}). Pulando.")
             continue
 
+        if aluno.nome.strip().upper() in ja_processados:
+            print(f"  Ja corrigida (RA {aluno.ra}, {aluno.nome}). Pulando.")
+            continue
+
+        houve_pendente = True
         pdf_bytes = _baixar_pdf(drive, arquivo["id"])
         imagem = _renderizar_primeira_pagina(pdf_bytes)
 
@@ -153,6 +150,9 @@ def main() -> None:
         )
         adicionar_linha(SPREADSHEET_ID, linha)
         print("  Gravado na planilha.")
+
+    if not houve_pendente:
+        print("\nNenhuma prova nova para corrigir (todas ja estavam na planilha).")
 
 
 if __name__ == "__main__":

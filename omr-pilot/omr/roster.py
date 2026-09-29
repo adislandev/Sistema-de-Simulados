@@ -13,7 +13,8 @@ from dataclasses import dataclass
 from difflib import SequenceMatcher
 from pathlib import Path
 
-LIMIAR_SIMILARIDADE = 0.6
+LIMIAR_SIMILARIDADE_TOKEN = 0.75
+COBERTURA_MINIMA = 1.0
 
 
 @dataclass
@@ -35,17 +36,39 @@ def carregar_lista_chamada(caminho_csv: str | Path) -> list[Aluno]:
     return alunos
 
 
+def _cobertura(tokens_consulta: list[str], tokens_aluno: list[str]) -> tuple[float, float]:
+    """Retorna (cobertura, media_dos_ratios): cobertura = fracao dos tokens da
+    consulta (ex.: nome do arquivo, "Rai Douglas") que encontram um token
+    correspondente no nome oficial (ex.: "RAI DOUGLAS PINHEIRO FRANCO") - assim
+    um nome de arquivo parcial (so primeiro+ultimo nome) ainda casa certo com
+    o nome completo da lista de chamada, sem exigir igualdade do nome inteiro."""
+    if not tokens_consulta:
+        return 0.0, 0.0
+    ratios = []
+    casados = 0
+    for token in tokens_consulta:
+        melhor_ratio = max(
+            (SequenceMatcher(None, token, ta).ratio() for ta in tokens_aluno), default=0.0
+        )
+        ratios.append(melhor_ratio)
+        if melhor_ratio >= LIMIAR_SIMILARIDADE_TOKEN:
+            casados += 1
+    return casados / len(tokens_consulta), sum(ratios) / len(ratios)
+
+
 def buscar_por_nome(nome_consulta: str, alunos: list[Aluno]) -> tuple[Aluno | None, float]:
-    """Retorna (aluno mais provavel, score de similaridade 0-1) ou (None, 0.0)
-    se nada atingir o limiar minimo."""
-    alvo = _normalizar(nome_consulta)
+    """Retorna (aluno mais provavel, score 0-1) ou (None, score) se nenhum
+    candidato cobrir todos os tokens do nome de consulta."""
+    tokens_consulta = _normalizar(nome_consulta).split()
     melhor: Aluno | None = None
-    melhor_score = 0.0
+    melhor_chave = (0.0, 0.0)
     for aluno in alunos:
-        score = SequenceMatcher(None, alvo, _normalizar(aluno.nome)).ratio()
-        if score > melhor_score:
-            melhor_score = score
+        tokens_aluno = _normalizar(aluno.nome).split()
+        chave = _cobertura(tokens_consulta, tokens_aluno)
+        if chave > melhor_chave:
+            melhor_chave = chave
             melhor = aluno
-    if melhor_score < LIMIAR_SIMILARIDADE:
-        return None, melhor_score
-    return melhor, melhor_score
+    cobertura, media_ratio = melhor_chave
+    if cobertura < COBERTURA_MINIMA:
+        return None, media_ratio
+    return melhor, media_ratio
