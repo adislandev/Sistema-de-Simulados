@@ -244,6 +244,11 @@ export async function listarProvasPresenciais(): Promise<ProvaPresencialResultad
   return (data ?? []) as ProvaPresencialResultado[];
 }
 
+export async function confirmarNotaDissertativa(id: string, nota: number): Promise<void> {
+  const { error } = await supabase.rpc("rpc_confirmar_nota_dissertativa", { p_id: id, p_nota: nota });
+  if (error) throw error;
+}
+
 export async function buscarRespostasTentativa(tentativaId: string): Promise<RespostaQuestaoPainel[]> {
   const { data, error } = await supabase
     .from("respostas")

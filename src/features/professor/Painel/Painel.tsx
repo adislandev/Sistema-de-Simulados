@@ -6,6 +6,7 @@ import {
   apagarResultadoAluno,
   buscarRespostasTentativa,
   buscarTentativasDetalhe,
+  confirmarNotaDissertativa,
   esvaziarLixeira,
   listarDesempenhoQuestoes,
   listarLixeira,
@@ -146,6 +147,9 @@ export default function Painel() {
   const [erroPresenciais, setErroPresenciais] = useState<string | null>(null);
   const [turmaPresencial, setTurmaPresencial] = useState("");
   const [provaSelecionada, setProvaSelecionada] = useState<ProvaPresencialResultado | null>(null);
+  const [notaDissertativaInput, setNotaDissertativaInput] = useState("");
+  const [salvandoNotaDissertativa, setSalvandoNotaDissertativa] = useState(false);
+  const [erroNotaDissertativa, setErroNotaDissertativa] = useState<string | null>(null);
 
   const [alunoSelecionado, setAlunoSelecionado] = useState<AlunoSelecionado | null>(null);
   const [detalheTentativas, setDetalheTentativas] = useState<TentativaDetalhePainel[]>([]);
@@ -230,6 +234,36 @@ export default function Painel() {
     setTurmaPresencial("");
     setProvaSelecionada(null);
     carregarPresenciais();
+  }
+
+  useEffect(() => {
+    if (!provaSelecionada) return;
+    const notaAtual = provaSelecionada.nota_dissertativa ?? provaSelecionada.nota_dissertativa_sugerida;
+    setNotaDissertativaInput(notaAtual !== null && notaAtual !== undefined ? String(notaAtual) : "");
+    setErroNotaDissertativa(null);
+  }, [provaSelecionada]);
+
+  async function handleConfirmarNotaDissertativa() {
+    if (!provaSelecionada) return;
+    const nota = Number(notaDissertativaInput.replace(",", "."));
+    if (Number.isNaN(nota) || nota < 0) {
+      setErroNotaDissertativa("Informe uma nota válida (0 ou maior).");
+      return;
+    }
+
+    setSalvandoNotaDissertativa(true);
+    setErroNotaDissertativa(null);
+    try {
+      await confirmarNotaDissertativa(provaSelecionada.id, nota);
+      const atualizadas = await listarProvasPresenciais();
+      setProvasPresenciais(atualizadas);
+      const atualizada = atualizadas.find((p) => p.id === provaSelecionada.id) ?? null;
+      setProvaSelecionada(atualizada);
+    } catch {
+      setErroNotaDissertativa("Não foi possível gravar a nota. Tente novamente.");
+    } finally {
+      setSalvandoNotaDissertativa(false);
+    }
   }
 
   async function sair() {
@@ -406,9 +440,19 @@ export default function Painel() {
               <div className="cartao" style={{ padding: 16 }}>
                 <p className="texto-suave" style={{ margin: "0 0 4px" }}>Dissertativas</p>
                 {provaSelecionada.nota_dissertativa !== null ? (
-                  <p style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
-                    {formatarNota(provaSelecionada.nota_dissertativa)} pts
-                  </p>
+                  <>
+                    <p style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+                      {formatarNota(provaSelecionada.nota_dissertativa)} pts
+                    </p>
+                    <p className="texto-suave" style={{ margin: "2px 0 0", fontSize: "0.75rem" }}>
+                      Confirmada pelo professor{provaSelecionada.dissertativa_revisada_em ? ` em ${formatarData(provaSelecionada.dissertativa_revisada_em)}` : ""}
+                    </p>
+                  </>
+                ) : provaSelecionada.nota_dissertativa_sugerida !== null ? (
+                  <>
+                    <span className="emblema emblema-aviso">Sugestão da IA: {formatarNota(provaSelecionada.nota_dissertativa_sugerida)}</span>
+                    <p className="texto-suave" style={{ margin: "4px 0 0", fontSize: "0.75rem" }}>Aguardando confirmação do professor</p>
+                  </>
                 ) : (
                   <span className="emblema emblema-aviso">Aguardando correção</span>
                 )}
@@ -435,6 +479,89 @@ export default function Painel() {
 
             {provaSelecionada.observacoes && (
               <p className="mensagem-erro">{provaSelecionada.observacoes}</p>
+            )}
+
+            {provaSelecionada.dissertativas_ia && provaSelecionada.dissertativas_ia.length > 0 && (
+              <>
+                <h2 style={{ fontSize: "1rem", fontWeight: 600, margin: "28px 0 12px" }}>
+                  Revisão das dissertativas (sugestão da IA)
+                </h2>
+
+                {provaSelecionada.dissertativas_ia.map((d) => (
+                  <div key={d.questao} className="cartao" style={{ padding: 16, marginBottom: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
+                      <p style={{ margin: 0, fontWeight: 600 }}>Questão {d.questao}</p>
+                      {d.pendente_revisao_manual ? (
+                        <span className="emblema emblema-erro">Pendente de revisão manual</span>
+                      ) : (
+                        <span className="emblema emblema-neutro">
+                          Sugestão: {d.nota_sugerida_total !== null ? formatarNota(d.nota_sugerida_total) : "—"}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="texto-suave" style={{ margin: "0 0 4px", fontSize: "0.8rem" }}>Transcrição literal:</p>
+                    <p
+                      style={{
+                        margin: "0 0 12px",
+                        padding: 10,
+                        background: "var(--cor-fundo)",
+                        borderRadius: 8,
+                        whiteSpace: "pre-wrap",
+                        fontFamily: "monospace",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      {d.transcricao || "(em branco)"}
+                    </p>
+
+                    {d.criterios.length > 0 && (
+                      <div style={{ display: "grid", gap: 8 }}>
+                        {d.criterios.map((c, i) => (
+                          <div key={i} style={{ borderLeft: "3px solid var(--cor-borda)", paddingLeft: 10 }}>
+                            <p style={{ margin: 0, fontWeight: 600, fontSize: "0.85rem" }}>
+                              {c.nome}: {c.nota_sugerida}/{c.nota_maxima}
+                            </p>
+                            <p className="texto-suave" style={{ margin: "2px 0 0", fontSize: "0.8rem" }}>{c.justificativa}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {d.observacao && (
+                      <p className="texto-suave" style={{ margin: "12px 0 0", fontSize: "0.8rem", fontStyle: "italic" }}>
+                        {d.observacao}
+                      </p>
+                    )}
+                  </div>
+                ))}
+
+                <div className="cartao" style={{ padding: 16, marginTop: 4 }}>
+                  <label htmlFor="nota-dissertativa-final" style={{ display: "block", fontWeight: 600, marginBottom: 8 }}>
+                    Nota final das dissertativas (confirmar ou ajustar)
+                  </label>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    <input
+                      id="nota-dissertativa-final"
+                      type="text"
+                      inputMode="decimal"
+                      value={notaDissertativaInput}
+                      onChange={(e) => setNotaDissertativaInput(e.target.value)}
+                      style={{ maxWidth: 120 }}
+                      placeholder="0.0"
+                    />
+                    <button
+                      type="button"
+                      className="botao botao-primario"
+                      onClick={handleConfirmarNotaDissertativa}
+                      disabled={salvandoNotaDissertativa}
+                    >
+                      {salvandoNotaDissertativa ? "Salvando..." : "Confirmar nota"}
+                    </button>
+                  </div>
+                  {erroNotaDissertativa && <p className="mensagem-erro" style={{ marginBottom: 0 }}>{erroNotaDissertativa}</p>}
+                </div>
+              </>
             )}
           </div>
         </div>
