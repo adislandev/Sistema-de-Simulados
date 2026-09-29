@@ -184,6 +184,9 @@ def main() -> None:
                     nota_sugerida_total=nota_sugerida,
                     dissertativas_ia=dissertativas_ia,
                 )
+                print(f"  Dissertativas detectadas: {len(dissertativas_ia)} (paginas: {len(paginas)})")
+                for d in dissertativas_ia:
+                    print(f"    Q{d['questao']}: pendente={d.get('pendente_revisao_manual')} nota={d.get('nota_sugerida_total')} obs={d.get('observacao')!r}")
                 print(f"  Sugestao de IA para as dissertativas gravada (nota sugerida: {nota_sugerida}).")
             except Exception as erro:  # nao interrompe o pipeline - a nota objetiva ja foi gravada
                 print(f"  AVISO: falha ao avaliar/gravar sugestao das dissertativas: {erro}")
