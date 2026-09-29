@@ -1,5 +1,5 @@
 import { supabase } from "./supabaseClient";
-import type { DesempenhoQuestao } from "../types/database";
+import type { DesempenhoQuestao, ProvaPresencialResultado } from "../types/database";
 
 interface TentativaBruta {
   numero_tentativa: number;
@@ -233,6 +233,15 @@ interface RespostaLinhaBruta {
   questao_id: string;
   correta: boolean;
   questoes: { codigo: string } | null;
+}
+
+export async function listarProvasPresenciais(): Promise<ProvaPresencialResultado[]> {
+  const { data, error } = await supabase
+    .from("provas_presenciais_resultados")
+    .select("*")
+    .order("nome", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as ProvaPresencialResultado[];
 }
 
 export async function buscarRespostasTentativa(tentativaId: string): Promise<RespostaQuestaoPainel[]> {
