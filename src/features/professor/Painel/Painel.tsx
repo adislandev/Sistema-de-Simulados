@@ -9,6 +9,7 @@ import {
   esvaziarLixeira,
   listarDesempenhoQuestoes,
   listarLixeira,
+  listarProvasPresenciais,
   listarQuestoesPorSimulado,
   listarResultadosTurma,
   restaurarResultadoAluno,
@@ -18,12 +19,13 @@ import {
   type RespostaQuestaoPainel,
   type TentativaDetalhePainel,
 } from "../../../lib/professorApi";
+import type { ProvaPresencialResultado } from "../../../types/database";
 import { supabase } from "../../../lib/supabaseClient";
 import { exportarResultadosXlsx } from "../../../lib/exportarXlsx";
 import { formatarData, formatarNota, formatarPontoExtra, formatarTempo } from "../../../lib/format";
 import { useSessaoProfessor } from "../useSessaoProfessor";
 
-type Aba = "resultados" | "lixeira";
+type Aba = "resultados" | "presenciais" | "lixeira";
 
 interface AlunoSelecionado {
   alunoId: string;
@@ -51,6 +53,74 @@ function corPorPercentual(percentual: number): string {
   return "var(--cor-aviso)";
 }
 
+const NOTA_MAXIMA_PROVA_PRESENCIAL = 7;
+
+function percentualNotaPresencial(nota: number | null): number | null {
+  if (nota === null) return null;
+  return (nota / NOTA_MAXIMA_PROVA_PRESENCIAL) * 100;
+}
+
+// Faixas próprias para a nota de prova presencial - não reaproveita classeEmblema()
+// porque aquela usa a cor de marca (--cor-primaria) como "neutro", que hoje é o
+// mesmo laranja do botão de aba ativo: o badge de nota ficava com a mesma cor da
+// navegação, sem comunicar se a nota é boa, mediana ou baixa.
+function classeEmblemaNotaPresencial(percentual: number): string {
+  if (percentual >= 70) return "emblema-sucesso";
+  if (percentual < 40) return "emblema-erro";
+  return "emblema-aviso";
+}
+
+function CartaoResumo({
+  icone,
+  cor,
+  corFundo,
+  label,
+  valor,
+}: {
+  icone: React.ReactNode;
+  cor: string;
+  corFundo: string;
+  label: string;
+  valor: number | string;
+}) {
+  return (
+    <div className="cartao" style={{ padding: 16, display: "flex", alignItems: "center", gap: 14 }}>
+      <span
+        aria-hidden="true"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 40,
+          height: 40,
+          borderRadius: 10,
+          background: corFundo,
+          color: cor,
+          flexShrink: 0,
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {icone}
+        </svg>
+      </span>
+      <div>
+        <p className="texto-suave" style={{ margin: "0 0 2px" }}>{label}</p>
+        <p style={{ margin: 0, fontSize: "1.5rem", fontWeight: 700 }}>{valor}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function Painel() {
   const navigate = useNavigate();
   const { sessao } = useSessaoProfessor();
@@ -70,6 +140,12 @@ export default function Painel() {
   const [lixeira, setLixeira] = useState<LixeiraItemPainel[]>([]);
   const [carregandoLixeira, setCarregandoLixeira] = useState(false);
   const [erroLixeira, setErroLixeira] = useState<string | null>(null);
+
+  const [provasPresenciais, setProvasPresenciais] = useState<ProvaPresencialResultado[]>([]);
+  const [carregandoPresenciais, setCarregandoPresenciais] = useState(false);
+  const [erroPresenciais, setErroPresenciais] = useState<string | null>(null);
+  const [turmaPresencial, setTurmaPresencial] = useState("");
+  const [provaSelecionada, setProvaSelecionada] = useState<ProvaPresencialResultado | null>(null);
 
   const [alunoSelecionado, setAlunoSelecionado] = useState<AlunoSelecionado | null>(null);
   const [detalheTentativas, setDetalheTentativas] = useState<TentativaDetalhePainel[]>([]);
@@ -135,6 +211,25 @@ export default function Painel() {
   function abrirLixeira() {
     setAba("lixeira");
     carregarLixeira();
+  }
+
+  async function carregarPresenciais() {
+    setCarregandoPresenciais(true);
+    setErroPresenciais(null);
+    try {
+      setProvasPresenciais(await listarProvasPresenciais());
+    } catch {
+      setErroPresenciais("Não foi possível carregar as provas presenciais.");
+    } finally {
+      setCarregandoPresenciais(false);
+    }
+  }
+
+  function abrirPresenciais() {
+    setAba("presenciais");
+    setTurmaPresencial("");
+    setProvaSelecionada(null);
+    carregarPresenciais();
   }
 
   async function sair() {
@@ -238,10 +333,114 @@ export default function Painel() {
     return Array.from(turmas).sort();
   }, [resultados, simuladoId]);
 
+  const turmasPresenciais = useMemo(() => {
+    const turmas = new Set(provasPresenciais.map((p) => p.turma).filter((t): t is string => Boolean(t)));
+    return Array.from(turmas).sort();
+  }, [provasPresenciais]);
+
+  const presenciaisFiltradas = useMemo(() => {
+    if (!turmaPresencial) return provasPresenciais;
+    return provasPresenciais.filter((p) => p.turma === turmaPresencial);
+  }, [provasPresenciais, turmaPresencial]);
+
   const desempenhoFiltrado = useMemo(() => {
     if (!questaoIdsSimulado) return [];
     return desempenhoQuestoes.filter((q) => questaoIdsSimulado.has(q.questao_id));
   }, [desempenhoQuestoes, questaoIdsSimulado]);
+
+  if (provaSelecionada) {
+    const percentual = percentualNotaPresencial(provaSelecionada.nota_total);
+    return (
+      <div className="pagina">
+        <div className="container-largo">
+          <div className="cartao">
+            <button
+              type="button"
+              className="botao botao-secundario"
+              onClick={() => setProvaSelecionada(null)}
+              style={{ marginBottom: 16 }}
+            >
+              ← Voltar às provas presenciais
+            </button>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+              <div>
+                <h1 className="titulo-pagina">{provaSelecionada.nome}</h1>
+                <p className="subtitulo-pagina" style={{ margin: 0 }}>
+                  RA {provaSelecionada.ra}
+                  {provaSelecionada.turma ? ` · Turma ${provaSelecionada.turma}` : ""}
+                </p>
+                <p className="texto-suave" style={{ margin: "4px 0 0" }}>{provaSelecionada.prova_tipo}</p>
+              </div>
+
+              <div style={{ textAlign: "center" }}>
+                <div
+                  style={{
+                    fontSize: "2rem",
+                    fontWeight: 700,
+                    color: percentual !== null ? corPorPercentual(percentual) : "var(--cor-borda)",
+                    lineHeight: 1,
+                  }}
+                >
+                  {formatarNota(provaSelecionada.nota_total)}
+                </div>
+                <p className="texto-suave" style={{ margin: "4px 0 0" }}>de {NOTA_MAXIMA_PROVA_PRESENCIAL.toFixed(1)}</p>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+                gap: 12,
+                margin: "24px 0",
+              }}
+            >
+              <div className="cartao" style={{ padding: 16 }}>
+                <p className="texto-suave" style={{ margin: "0 0 4px" }}>Objetivas</p>
+                <p style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+                  {provaSelecionada.acertos ?? "—"}/8 acertos
+                </p>
+                <p className="texto-suave" style={{ margin: "2px 0 0" }}>{formatarNota(provaSelecionada.nota_objetiva)} pts</p>
+              </div>
+              <div className="cartao" style={{ padding: 16 }}>
+                <p className="texto-suave" style={{ margin: "0 0 4px" }}>Dissertativas</p>
+                {provaSelecionada.nota_dissertativa !== null ? (
+                  <p style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+                    {formatarNota(provaSelecionada.nota_dissertativa)} pts
+                  </p>
+                ) : (
+                  <span className="emblema emblema-aviso">Aguardando correção</span>
+                )}
+              </div>
+              <div className="cartao" style={{ padding: 16 }}>
+                <p className="texto-suave" style={{ margin: "0 0 4px" }}>Data da correção</p>
+                <p style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>{formatarData(provaSelecionada.data_correcao)}</p>
+              </div>
+            </div>
+
+            <h2 style={{ fontSize: "1rem", fontWeight: 600, margin: "0 0 12px" }}>Respostas objetivas</h2>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
+              {provaSelecionada.respostas_objetivas.map((resp, i) => (
+                <div
+                  key={i}
+                  className="cartao"
+                  style={{ padding: "10px 16px", textAlign: "center", minWidth: 56 }}
+                >
+                  <p className="texto-suave" style={{ margin: "0 0 4px", fontSize: "0.75rem" }}>Q{i + 1}</p>
+                  <p style={{ margin: 0, fontWeight: 700 }}>{resp ?? "—"}</p>
+                </div>
+              ))}
+            </div>
+
+            {provaSelecionada.observacoes && (
+              <p className="mensagem-erro">{provaSelecionada.observacoes}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (alunoSelecionado) {
     const notasChart = detalheTentativas.map((t) => ({
@@ -337,6 +536,29 @@ export default function Painel() {
                   <path d="M8 16h.01"/>
                 </svg>
                 Resultados
+              </button>
+              <button
+                type="button"
+                className={`botao ${aba === "presenciais" ? "botao-primario" : "botao-secundario"}`}
+                onClick={abrirPresenciais}
+                style={{ display: "flex", alignItems: "center", gap: 6 }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 12l2 2 4-4" />
+                  <path d="M21 12c0 1-4 6-9 6s-9-5-9-6 4-6 9-6 9 5 9 6z" />
+                </svg>
+                Provas Presenciais
               </button>
               <button
                 type="button"
@@ -441,6 +663,7 @@ export default function Painel() {
                         <tr
                           key={`${r.alunoId}:${r.simuladoId}`}
                           onClick={() => abrirDetalheAluno(r)}
+                          className="linha-clicavel"
                           style={{ cursor: "pointer" }}
                         >
                           <td>{r.alunoNome}</td>
@@ -492,6 +715,160 @@ export default function Painel() {
                     }))}
                   />
                 </>
+              )}
+            </>
+          )}
+
+          {aba === "presenciais" && (
+            <>
+              <p className="texto-suave" style={{ marginTop: 0, marginBottom: 20 }}>
+                Resultados de provas presenciais corrigidas automaticamente (leitura de bolhas + identificação por
+                RA). Clique em um aluno para ver o detalhamento completo.
+              </p>
+
+              {!carregandoPresenciais && !erroPresenciais && provasPresenciais.length > 0 && (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                    gap: 12,
+                    marginBottom: 24,
+                  }}
+                >
+                  <CartaoResumo
+                    icone={<path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />}
+                    cor="var(--cor-sucesso)"
+                    corFundo="#e6f6ec"
+                    label="Alunos corrigidos"
+                    valor={presenciaisFiltradas.length}
+                  />
+                  <CartaoResumo
+                    icone={<path d="M3 3v18h18M7 15v4M11 10v9M15 6v13M19 12v7" />}
+                    cor="var(--cor-primaria)"
+                    corFundo="var(--color-primary-50, #fbe9ce)"
+                    label="Média da nota total"
+                    valor={
+                      presenciaisFiltradas.length > 0
+                        ? formatarNota(
+                            presenciaisFiltradas.reduce((soma, p) => soma + (p.nota_total ?? 0), 0) /
+                              presenciaisFiltradas.length,
+                          )
+                        : "—"
+                    }
+                  />
+                  <CartaoResumo
+                    icone={<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></>}
+                    cor="var(--cor-aviso)"
+                    corFundo="#fff4e0"
+                    label="Dissertativas pendentes"
+                    valor={presenciaisFiltradas.filter((p) => p.nota_dissertativa === null).length}
+                  />
+                </div>
+              )}
+
+              {turmasPresenciais.length > 0 && (
+                <div className="campo" style={{ maxWidth: 240, marginBottom: 20 }}>
+                  <label htmlFor="filtro-turma-presencial">Turma</label>
+                  <select
+                    id="filtro-turma-presencial"
+                    value={turmaPresencial}
+                    onChange={(e) => setTurmaPresencial(e.target.value)}
+                  >
+                    <option value="">Todas as turmas</option>
+                    {turmasPresenciais.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {carregandoPresenciais && <p className="texto-suave">Carregando...</p>}
+              {erroPresenciais && <p className="mensagem-erro">{erroPresenciais}</p>}
+
+              {!carregandoPresenciais && !erroPresenciais && presenciaisFiltradas.length === 0 && (
+                <p className="texto-suave">Nenhuma prova presencial corrigida ainda.</p>
+              )}
+
+              {!carregandoPresenciais && !erroPresenciais && presenciaisFiltradas.length > 0 && (
+                <div className="tabela-wrap">
+                  <table className="tabela">
+                    <thead>
+                      <tr>
+                        <th>Aluno</th>
+                        <th>RA</th>
+                        <th>Nota</th>
+                        <th>Dissertativa</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {presenciaisFiltradas.map((p) => {
+                        const percentual = percentualNotaPresencial(p.nota_total);
+                        return (
+                          <tr
+                            key={p.id}
+                            onClick={() => setProvaSelecionada(p)}
+                            className="linha-clicavel"
+                            style={{ cursor: "pointer" }}
+                          >
+                            <td>
+                              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                <span
+                                  aria-hidden="true"
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: "50%",
+                                    background: "var(--cor-fundo)",
+                                    color: "var(--cor-texto-suave)",
+                                    fontSize: "0.75rem",
+                                    fontWeight: 700,
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {p.nome.charAt(0)}
+                                </span>
+                                {p.nome}
+                              </div>
+                            </td>
+                            <td>{p.ra}</td>
+                            <td>
+                              <span className={`emblema ${percentual !== null ? classeEmblemaNotaPresencial(percentual) : "emblema-neutro"}`}>
+                                {formatarNota(p.nota_total)}
+                              </span>
+                            </td>
+                            <td>
+                              {p.nota_dissertativa !== null ? (
+                                <span className="emblema emblema-sucesso">{formatarNota(p.nota_dissertativa)}</span>
+                              ) : (
+                                <span className="emblema emblema-aviso">Pendente</span>
+                              )}
+                            </td>
+                            <td style={{ textAlign: "right" }}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="var(--cor-borda)"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                              >
+                                <path d="m9 18 6-6-6-6" />
+                              </svg>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </>
           )}

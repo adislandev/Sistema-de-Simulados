@@ -209,3 +209,12 @@ table.tabela th {
   background: #eef0fd;
   color: var(--cor-primaria);
 }
+
+.emblema-aviso {
+  background: #fff4e0;
+  color: var(--cor-aviso);
+}
+
+table.tabela tbody tr.linha-clicavel:hover {
+  background: var(--cor-fundo);
+}
