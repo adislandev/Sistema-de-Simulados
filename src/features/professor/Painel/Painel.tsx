@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BarChart from "../../../components/BarChart/BarChart";
+import BarraProgresso from "../../../components/BarraProgresso/BarraProgresso";
 import { listarSimuladosAtivos, type SimuladoComDisciplina } from "../../../lib/alunoApi";
 import {
   apagarResultadoAluno,
@@ -26,6 +27,8 @@ import { supabase } from "../../../lib/supabaseClient";
 import { exportarResultadosXlsx } from "../../../lib/exportarXlsx";
 import { formatarData, formatarNota, formatarPontoExtra, formatarTempo } from "../../../lib/format";
 import { useSessaoProfessor } from "../useSessaoProfessor";
+
+const DURACAO_ANIMACAO_CORRECAO_MS = 40_000;
 
 type Aba = "resultados" | "presenciais" | "lixeira";
 
@@ -153,6 +156,7 @@ export default function Painel() {
   const [erroNotaDissertativa, setErroNotaDissertativa] = useState<string | null>(null);
 
   const [disparandoCorrecao, setDisparandoCorrecao] = useState(false);
+  const [aguardandoCorrecao, setAguardandoCorrecao] = useState(false);
   const [mensagemDisparo, setMensagemDisparo] = useState<string | null>(null);
 
   const [alunoSelecionado, setAlunoSelecionado] = useState<AlunoSelecionado | null>(null);
@@ -245,15 +249,23 @@ export default function Painel() {
     setMensagemDisparo(null);
     try {
       await dispararCorrecaoProvas();
-      setMensagemDisparo(
-        "Correção disparada! Leva alguns minutos - volte aqui e clique em atualizar depois.",
-      );
+      setAguardandoCorrecao(true);
     } catch {
       setMensagemDisparo("Não foi possível disparar a correção. Tente novamente em instantes.");
-    } finally {
       setDisparandoCorrecao(false);
     }
   }
+
+  useEffect(() => {
+    if (!aguardandoCorrecao) return;
+    const id = window.setTimeout(() => {
+      setAguardandoCorrecao(false);
+      setDisparandoCorrecao(false);
+      setMensagemDisparo("Correção em andamento. Clique em Atualizar em instantes para ver os resultados.");
+      carregarPresenciais();
+    }, DURACAO_ANIMACAO_CORRECAO_MS);
+    return () => window.clearTimeout(id);
+  }, [aguardandoCorrecao]);
 
   useEffect(() => {
     if (!provaSelecionada) return;
@@ -578,6 +590,7 @@ export default function Painel() {
                       {salvandoNotaDissertativa ? "Salvando..." : "Confirmar nota"}
                     </button>
                   </div>
+                  {salvandoNotaDissertativa && <BarraProgresso rotulo="Salvando nota..." />}
                   {erroNotaDissertativa && <p className="mensagem-erro" style={{ marginBottom: 0 }}>{erroNotaDissertativa}</p>}
                 </div>
               </>
@@ -890,6 +903,9 @@ export default function Painel() {
                   >
                     {disparandoCorrecao ? "Disparando..." : "Corrigir provas"}
                   </button>
+                  {aguardandoCorrecao && (
+                    <BarraProgresso rotulo="Corrigindo provas..." duracaoMs={DURACAO_ANIMACAO_CORRECAO_MS} />
+                  )}
                   {mensagemDisparo && (
                     <p className="texto-suave" style={{ margin: "6px 0 0", fontSize: "0.8rem", maxWidth: 260 }}>
                       {mensagemDisparo}
