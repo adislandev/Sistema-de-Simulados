@@ -33,7 +33,7 @@ from omr.gabarito import extrair_respostas_corretas, obter_texto_documento  # no
 from omr.grade_detector import NUM_QUESTOES, ler_respostas  # noqa: E402
 from omr.roster import buscar_por_nome, carregar_lista_chamada  # noqa: E402
 from omr.sheets_writer import adicionar_linha, montar_linha  # noqa: E402
-from omr.supabase_writer import gravar_resultado, gravar_sugestao_dissertativa  # noqa: E402
+from omr.supabase_writer import gravar_resultado, gravar_sugestao_dissertativa, ras_sem_sugestao  # noqa: E402
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive.readonly",
@@ -95,6 +95,30 @@ def _renderizar_paginas(pdf_bytes: bytes) -> list[np.ndarray]:
     return paginas
 
 
+def avaliar_e_gravar_dissertativas(paginas: list[np.ndarray], ra: str) -> bool:
+    """Avalia as dissertativas via IA e grava a sugestao no Supabase. Nunca
+    levanta excecao (a nota objetiva ja foi gravada); retorna se deu certo."""
+    if not os.environ.get("DEEPSEEK_API_KEY"):
+        print("  DEEPSEEK_API_KEY nao definida - pulando sugestao de IA para as dissertativas.")
+        return False
+    try:
+        nota_sugerida, dissertativas_ia = avaliar_dissertativas_da_prova(paginas)
+        print(f"  Dissertativas detectadas: {len(dissertativas_ia)} (paginas: {len(paginas)})")
+        for d in dissertativas_ia:
+            print(f"    Q{d['questao']}: pendente={d.get('pendente_revisao_manual')} nota={d.get('nota_sugerida_total')} obs={d.get('observacao')!r}")
+        gravar_sugestao_dissertativa(
+            ra=ra,
+            prova_tipo=PROVA_TIPO_PADRAO,
+            nota_sugerida_total=nota_sugerida,
+            dissertativas_ia=dissertativas_ia,
+        )
+        print(f"  Sugestao de IA para as dissertativas gravada (nota sugerida: {nota_sugerida}).")
+        return True
+    except Exception as erro:  # nao interrompe o pipeline - a nota objetiva ja foi gravada
+        print(f"  AVISO: falha ao avaliar/gravar sugestao das dissertativas: {erro}")
+        return False
+
+
 def main() -> None:
     creds = _credenciais(SCOPES)
     drive = build("drive", "v3", credentials=creds)
@@ -110,6 +134,13 @@ def main() -> None:
     gabarito_texto = obter_texto_documento(os.environ["GOOGLE_APPLICATION_CREDENTIALS"], GABARITO_DOC_ID)
     gabarito = extrair_respostas_corretas(gabarito_texto, NUM_QUESTOES)
 
+    try:
+        pendentes_sugestao = ras_sem_sugestao(PROVA_TIPO_PADRAO)
+    except Exception as erro:
+        print(f"AVISO: nao consegui consultar RAs sem sugestao das dissertativas: {erro}")
+        pendentes_sugestao = set()
+    sem_sugestao_falhou: list[str] = []
+
     houve_pendente = False
     for arquivo in provas:
         nome_prova = Path(arquivo["name"]).stem
@@ -121,7 +152,13 @@ def main() -> None:
             continue
 
         if aluno.nome.strip().upper() in ja_processados:
-            print(f"  Ja corrigida (RA {aluno.ra}, {aluno.nome}). Pulando.")
+            if aluno.ra in pendentes_sugestao:
+                print(f"  Ja corrigida (RA {aluno.ra}), mas sem sugestao das dissertativas - tentando de novo so essa etapa.")
+                paginas = _renderizar_paginas(_baixar_pdf(drive, arquivo["id"]))
+                if not avaliar_e_gravar_dissertativas(paginas, aluno.ra):
+                    sem_sugestao_falhou.append(aluno.ra)
+            else:
+                print(f"  Ja corrigida (RA {aluno.ra}, {aluno.nome}). Pulando.")
             continue
 
         houve_pendente = True
@@ -171,28 +208,17 @@ def main() -> None:
             )
             print("  Gravado no Supabase (painel do professor).")
         except Exception as erro:  # nao interrompe o pipeline se o Supabase falhar - a planilha ja foi gravada
-            print(f"  AVISO: falha ao gravar no Supabase: {erro}")
+            print(f"  AVISO: falha ao gravar no Supabase: {erro} - pulando dissertativas (a linha nao existe no painel).")
+            sem_sugestao_falhou.append(aluno.ra)
+            continue
 
-        if not os.environ.get("DEEPSEEK_API_KEY"):
-            print("  DEEPSEEK_API_KEY nao definida - pulando sugestao de IA para as dissertativas.")
-        else:
-            try:
-                nota_sugerida, dissertativas_ia = avaliar_dissertativas_da_prova(paginas)
-                gravar_sugestao_dissertativa(
-                    ra=aluno.ra,
-                    prova_tipo=PROVA_TIPO_PADRAO,
-                    nota_sugerida_total=nota_sugerida,
-                    dissertativas_ia=dissertativas_ia,
-                )
-                print(f"  Dissertativas detectadas: {len(dissertativas_ia)} (paginas: {len(paginas)})")
-                for d in dissertativas_ia:
-                    print(f"    Q{d['questao']}: pendente={d.get('pendente_revisao_manual')} nota={d.get('nota_sugerida_total')} obs={d.get('observacao')!r}")
-                print(f"  Sugestao de IA para as dissertativas gravada (nota sugerida: {nota_sugerida}).")
-            except Exception as erro:  # nao interrompe o pipeline - a nota objetiva ja foi gravada
-                print(f"  AVISO: falha ao avaliar/gravar sugestao das dissertativas: {erro}")
+        if not avaliar_e_gravar_dissertativas(paginas, aluno.ra):
+            sem_sugestao_falhou.append(aluno.ra)
 
     if not houve_pendente:
         print("\nNenhuma prova nova para corrigir (todas ja estavam na planilha).")
+    if sem_sugestao_falhou:
+        print(f"\nAVISO: {len(sem_sugestao_falhou)} aluno(s) ainda sem sugestao das dissertativas (RAs: {', '.join(sem_sugestao_falhou)}). Clique em Corrigir provas de novo para tentar outra vez.")
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ from typing import Any
 import numpy as np
 
 from .dissertativa_detector import localizar_blocos_dissertativas
+from .grade_detector import localizar_bolhas_por_reticulado
 from .dissertativa_ia import ResultadoAvaliacaoIA, avaliar_dissertativa
 
 VALOR_POR_QUESTAO_DISSERTATIVA = 1.5
@@ -26,11 +27,30 @@ FRACAO_INICIO_DISSERTATIVA_DEMAIS_PAGINAS = 0.08
 FRACAO_FIM_DISSERTATIVA = 0.92
 
 
+FOLGA_APOS_GRADE_EM_LINHAS = 1.2  # a Q9 comeca ~1,2 passo de linha abaixo da ultima bolha da grade
+
+
+def _inicio_q9_pela_grade(pagina: np.ndarray) -> float | None:
+    """Fracao da altura onde a Q9 comeca, ancorada na ultima linha da grade
+    de bolhas (acompanha o deslocamento/escala da foto). None se a grade nao
+    for localizada."""
+    colunas = localizar_bolhas_por_reticulado(pagina)
+    if colunas is None:
+        return None
+    ultima, penultima = colunas[0][-1], colunas[0][-2]
+    y = ultima.y + FOLGA_APOS_GRADE_EM_LINHAS * (ultima.y - penultima.y)
+    fracao = y / pagina.shape[0]
+    return fracao if 0.3 <= fracao <= 0.7 else None
+
+
 def _recortes_por_posicao(paginas: list[np.ndarray]) -> list[np.ndarray]:
     recortes = []
     for indice, pagina in enumerate(paginas):
         altura = pagina.shape[0]
-        inicio = FRACAO_INICIO_DISSERTATIVA_PAGINA_1 if indice == 0 else FRACAO_INICIO_DISSERTATIVA_DEMAIS_PAGINAS
+        if indice == 0:
+            inicio = _inicio_q9_pela_grade(pagina) or FRACAO_INICIO_DISSERTATIVA_PAGINA_1
+        else:
+            inicio = FRACAO_INICIO_DISSERTATIVA_DEMAIS_PAGINAS
         recortes.append(pagina[int(altura * inicio): int(altura * FRACAO_FIM_DISSERTATIVA), :].copy())
     return recortes
 

@@ -16,7 +16,7 @@ import os
 from datetime import date
 from typing import Any
 
-import requests
+from .http_retry import requisitar
 
 TABELA = "provas_presenciais_resultados"
 
@@ -55,7 +55,8 @@ def gravar_resultado(
         "observacoes": observacoes,
     }
 
-    resposta = requests.post(
+    requisitar(
+        "POST",
         f"{url}/rest/v1/{TABELA}",
         headers={
             "apikey": chave,
@@ -67,7 +68,6 @@ def gravar_resultado(
         json=linha,
         timeout=30,
     )
-    resposta.raise_for_status()
 
 
 def gravar_sugestao_dissertativa(
@@ -95,7 +95,8 @@ def gravar_sugestao_dissertativa(
         "dissertativas_ia": dissertativas_ia,
     }
 
-    resposta = requests.patch(
+    requisitar(
+        "PATCH",
         f"{url}/rest/v1/{TABELA}",
         headers={
             "apikey": chave,
@@ -107,4 +108,18 @@ def gravar_sugestao_dissertativa(
         json=linha,
         timeout=30,
     )
-    resposta.raise_for_status()
+
+
+def ras_sem_sugestao(prova_tipo: str) -> set[str]:
+    """RAs com a prova ja gravada mas sem a sugestao da IA para as
+    dissertativas (`dissertativas_ia` nulo) - ex.: a gravacao falhou numa
+    rodada anterior. Usado para tentar de novo so essa etapa."""
+    url, chave = _config()
+    resposta = requisitar(
+        "GET",
+        f"{url}/rest/v1/{TABELA}",
+        headers={"apikey": chave, "Authorization": f"Bearer {chave}"},
+        params={"select": "ra", "prova_tipo": f"eq.{prova_tipo}", "dissertativas_ia": "is.null"},
+        timeout=30,
+    )
+    return {linha["ra"] for linha in resposta.json()}
