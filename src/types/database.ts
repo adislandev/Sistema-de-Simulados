@@ -95,6 +95,22 @@ export interface DesempenhoQuestao {
   percentual_acerto: number | null;
 }
 
+export interface CriterioDissertativaIA {
+  nome: string;
+  nota_maxima: number;
+  nota_sugerida: number;
+  justificativa: string;
+}
+
+export interface DissertativaIA {
+  questao: number;
+  transcricao: string;
+  pendente_revisao_manual: boolean;
+  criterios: CriterioDissertativaIA[];
+  nota_sugerida_total: number | null;
+  observacao: string;
+}
+
 export interface ProvaPresencialResultado {
   id: string;
   ra: string;
@@ -108,4 +124,7 @@ export interface ProvaPresencialResultado {
   nota_total: number | null;
   data_correcao: string;
   observacoes: string;
+  nota_dissertativa_sugerida: number | null;
+  dissertativas_ia: DissertativaIA[] | null;
+  dissertativa_revisada_em: string | null;
 }
