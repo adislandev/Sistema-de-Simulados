@@ -1,0 +1,6 @@
+# Dados pessoais de alunos (amostras de prova, lista de chamada) - nunca versionar.
+samples/
+dados/
+_scratch/
+__pycache__/
+*.pyc
