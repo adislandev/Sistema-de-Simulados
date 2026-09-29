@@ -1,0 +1,39 @@
+name: OMR - Correção automatizada de provas
+
+on:
+  schedule:
+    # 08:00 UTC = 05:00 America/Sao_Paulo (verificação diária, não precisa tempo real)
+    - cron: "0 8 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: omr-pilot
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Preparar credenciais e lista de chamada (a partir de Secrets)
+        run: |
+          mkdir -p dados
+          printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/service-account.json"
+          printf '%s' "$LISTA_CHAMADA_CSV_B64" | base64 --decode > dados/lista_chamada.csv
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          LISTA_CHAMADA_CSV_B64: ${{ secrets.LISTA_CHAMADA_CSV_B64 }}
+
+      - name: Rodar correção automatizada
+        run: python processar_pasta.py
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

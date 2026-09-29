@@ -1,0 +1,6 @@
+opencv-python-headless
+numpy
+pymupdf
+google-auth
+google-api-python-client
+requests
