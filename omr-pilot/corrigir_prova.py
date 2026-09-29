@@ -18,6 +18,7 @@ from pathlib import Path
 import cv2
 
 sys.path.insert(0, str(Path(__file__).parent))
+from omr.avaliacao import calcular_nota_objetiva  # noqa: E402
 from omr.gabarito import extrair_respostas_corretas, obter_texto_documento  # noqa: E402
 from omr.grade_detector import NUM_QUESTOES, ler_respostas  # noqa: E402
 from omr.roster import buscar_por_nome, carregar_lista_chamada  # noqa: E402
@@ -63,7 +64,7 @@ def main() -> None:
     gabarito = extrair_respostas_corretas(gabarito_texto, NUM_QUESTOES)
 
     acertos = sum(1 for r, g in zip(respostas, gabarito) if r == g)
-    nota_objetiva = round(acertos / NUM_QUESTOES * 10, 2)
+    nota_objetiva = calcular_nota_objetiva(acertos)
 
     print(f"Aluno identificado: {aluno.nome} (RA {aluno.ra}, similaridade {score:.2f})")
     print(f"{'Q':<3}{'Marcada':<10}{'Gabarito':<10}Preenchimentos (A-E)")

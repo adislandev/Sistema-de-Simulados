@@ -9,6 +9,7 @@ from pathlib import Path
 import cv2
 
 sys.path.insert(0, str(Path(__file__).parent))
+from omr.avaliacao import calcular_nota_objetiva  # noqa: E402
 from omr.grade_detector import ler_respostas, localizar_bolhas  # noqa: E402
 
 GABARITO = ["A", "B", "A", "B", "C", "C", "B", "A"]
@@ -38,10 +39,9 @@ def main() -> None:
         marcada = resultado.alternativa or ("AMBIGUA" if resultado.ambigua else "BRANCO")
         print(f"{resultado.numero:<3}{marcada:<10}{esperado:<10}{status:<10}[{preenchimentos_fmt}]")
 
-    nota = round(acertos / len(GABARITO) * 10, 2)
-    print(f"\nAcertos: {acertos}/{len(GABARITO)}  Nota objetiva: {nota}")
-    print("Esperado (validacao manual): 7/8 acertos, erro na Q4 (marcou D em vez de B), nota 3.5*")
-    print("* nota manual calculada sobre 10 questoes totais (8 objetivas); aqui a nota e apenas sobre as objetivas.")
+    nota = calcular_nota_objetiva(acertos)
+    print(f"\nAcertos: {acertos}/{len(GABARITO)}  Nota objetiva (0,5 por questao, max 4,0): {nota}")
+    print("Esperado (validacao manual): 7/8 acertos, erro na Q4 (marcou D em vez de B), nota 3.5")
 
 
 if __name__ == "__main__":
