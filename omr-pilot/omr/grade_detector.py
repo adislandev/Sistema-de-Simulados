@@ -211,7 +211,9 @@ def _fracao_escura(imagem_cinza: np.ndarray, bolha: Bolha) -> float:
 
 
 def ler_respostas(imagem_bgr: np.ndarray, num_questoes: int = NUM_QUESTOES) -> list[ResultadoQuestao]:
-    colunas = localizar_bolhas(imagem_bgr)
+    colunas = localizar_bolhas_por_reticulado(imagem_bgr, num_questoes)
+    if colunas is None:  # grade nao encontrada: tenta o metodo antigo (agrupamento por coluna)
+        colunas = localizar_bolhas(imagem_bgr, num_questoes)
     cinza = cv2.cvtColor(imagem_bgr, cv2.COLOR_BGR2GRAY)
 
     num_linhas = min(len(coluna) for coluna in colunas)
@@ -245,3 +247,107 @@ def ler_respostas(imagem_bgr: np.ndarray, num_questoes: int = NUM_QUESTOES) -> l
             )
         )
     return resultados
+
+
+# --- Ajuste de reticulado (grade regular) ---------------------------------
+# Passo aproximado entre bolhas na resolucao de referencia (altura 5556px,
+# A4 a 400dpi): ~195px entre alternativas (colunas) e ~105px entre questoes.
+PASSO_COLUNA_REF = 195.0
+PASSO_LINHA_REF = 105.0
+TOLERANCIA_PASSO = 0.25  # fracao do passo aceita ao procurar vetores da grade
+TOLERANCIA_ENCAIXE = 0.3  # distancia maxima (em passos) de um circulo ao ponto da grade
+
+
+def _estimar_vetores_grade(pontos: np.ndarray, escala: float) -> tuple[np.ndarray, np.ndarray] | None:
+    """Estima os vetores u (proxima alternativa) e v (proxima questao) pela
+    mediana das diferencas entre pares de circulos proximos do passo esperado.
+    Robusto a rotacao leve da foto."""
+    esperado_u = np.array([PASSO_COLUNA_REF * escala, 0.0])
+    esperado_v = np.array([0.0, PASSO_LINHA_REF * escala])
+    diffs = pontos[None, :, :] - pontos[:, None, :]
+    diffs = diffs.reshape(-1, 2)
+    achados = []
+    for esperado in (esperado_u, esperado_v):
+        tol = TOLERANCIA_PASSO * np.linalg.norm(esperado)
+        proximos = diffs[np.linalg.norm(diffs - esperado, axis=1) < tol]
+        if len(proximos) < 6:
+            return None
+        achados.append(np.median(proximos, axis=0))
+    return achados[0], achados[1]
+
+
+def _ajustar_reticulado(
+    pontos: np.ndarray, u: np.ndarray, v: np.ndarray, num_linhas: int
+) -> tuple[np.ndarray, np.ndarray, np.ndarray] | None:
+    """Escolhe a origem (bolha A da questao 1) que maximiza os circulos que caem
+    numa grade de 5 x num_linhas, e refina origem/u/v por minimos quadrados."""
+    base = np.column_stack([u, v])
+    inversa = np.linalg.inv(base)
+    n_col = len(ALTERNATIVAS)
+    melhor = None
+    for p0 in pontos:
+        coords = (pontos - p0) @ inversa.T
+        arredondado = np.round(coords)
+        encaixa = np.linalg.norm(coords - arredondado, axis=1) < TOLERANCIA_ENCAIXE
+        if encaixa.sum() < 8:
+            continue
+        indices = arredondado[encaixa].astype(int)
+        for a0 in range(int(indices[:, 0].min()), int(indices[:, 0].max()) + 1):
+            for b0 in range(int(indices[:, 1].min()), int(indices[:, 1].max()) + 1):
+                dentro = (
+                    (indices[:, 0] >= a0) & (indices[:, 0] < a0 + n_col)
+                    & (indices[:, 1] >= b0) & (indices[:, 1] < b0 + num_linhas)
+                )
+                if melhor is None or dentro.sum() > melhor[0]:
+                    melhor = (int(dentro.sum()), p0, a0, b0)
+    if melhor is None or melhor[0] < 12:
+        return None
+
+    _, p0, a0, b0 = melhor
+    coords = (pontos - p0) @ inversa.T
+    arredondado = np.round(coords).astype(int)
+    encaixa = (
+        (np.linalg.norm(coords - arredondado, axis=1) < TOLERANCIA_ENCAIXE)
+        & (arredondado[:, 0] >= a0) & (arredondado[:, 0] < a0 + n_col)
+        & (arredondado[:, 1] >= b0) & (arredondado[:, 1] < b0 + num_linhas)
+    )
+    a = arredondado[encaixa, 0] - a0
+    b = arredondado[encaixa, 1] - b0
+    matriz = np.column_stack([np.ones(len(a)), a, b])
+    coef, *_ = np.linalg.lstsq(matriz, pontos[encaixa], rcond=None)
+    return coef[0], coef[1], coef[2]  # origem, u, v
+
+
+def localizar_bolhas_por_reticulado(
+    imagem_bgr: np.ndarray, num_questoes: int = NUM_QUESTOES
+) -> list[list[Bolha | None]] | None:
+    """Alternativa robusta a `localizar_bolhas`: ajusta uma grade regular
+    (5 alternativas x num_questoes) aos circulos detectados e devolve as 40
+    posicoes previstas pela grade - inclusive as bolhas que o Hough nao
+    detectou (ex.: bolhas preenchidas) e ignorando circulos falsos (texto
+    'Questao', numeros das linhas). Retorna None se nao achar a grade."""
+    try:
+        circulos = _detectar_circulos(imagem_bgr)
+    except ValueError:
+        return None
+    escala = imagem_bgr.shape[0] / 5556.0
+    pontos = circulos[:, :2].astype(float)
+    if len(pontos) < 12:
+        return None
+
+    vetores = _estimar_vetores_grade(pontos, escala)
+    if vetores is None:
+        return None
+    ajuste = _ajustar_reticulado(pontos, vetores[0], vetores[1], num_questoes)
+    if ajuste is None:
+        return None
+    origem, u, v = ajuste
+    raio = float(np.median(circulos[:, 2]))
+
+    return [
+        [
+            Bolha(x=float(origem[0] + a * u[0] + b * v[0]), y=float(origem[1] + a * u[1] + b * v[1]), raio=raio)
+            for b in range(num_questoes)
+        ]
+        for a in range(len(ALTERNATIVAS))
+    ]
