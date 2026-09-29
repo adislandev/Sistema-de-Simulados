@@ -94,3 +94,18 @@ export interface DesempenhoQuestao {
   total_erros: number;
   percentual_acerto: number | null;
 }
+
+export interface ProvaPresencialResultado {
+  id: string;
+  ra: string;
+  nome: string;
+  turma: string | null;
+  prova_tipo: string;
+  respostas_objetivas: (string | null)[];
+  acertos: number | null;
+  nota_objetiva: number | null;
+  nota_dissertativa: number | null;
+  nota_total: number | null;
+  data_correcao: string;
+  observacoes: string;
+}
