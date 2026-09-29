@@ -67,6 +67,13 @@ def main() -> None:
             nota_sugerida_total=nota_sugerida,
             dissertativas_ia=dissertativas_ia,
         )
+        print(f"  Paginas renderizadas: {len(paginas)}  Dissertativas detectadas: {len(dissertativas_ia)}")
+        for d in dissertativas_ia:
+            print(
+                f"    Q{d['questao']}: pendente={d.get('pendente_revisao_manual')} "
+                f"nota={d.get('nota_sugerida_total')} obs={d.get('observacao')!r} "
+                f"transcricao={str(d.get('transcricao', ''))[:80]!r}"
+            )
         print(f"  Sugestao gravada (nota sugerida: {nota_sugerida}).")
         ras_alvo.discard(aluno.ra)
 
