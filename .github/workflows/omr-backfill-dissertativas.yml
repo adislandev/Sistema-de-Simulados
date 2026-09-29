@@ -1,0 +1,45 @@
+name: OMR - Reavaliar dissertativas (backfill)
+
+# Roda so a avaliacao de IA das dissertativas para alunos ja corrigidos
+# (o pipeline normal pula quem ja esta na planilha). Nao altera a nota objetiva.
+on:
+  workflow_dispatch:
+    inputs:
+      ras:
+        description: "RAs separados por espaco (ex.: 901007070 901005937)"
+        required: true
+        type: string
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: omr-pilot
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Preparar credenciais e lista de chamada (a partir de Secrets)
+        run: |
+          mkdir -p dados
+          printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/service-account.json"
+          printf '%s' "$LISTA_CHAMADA_CSV_B64" | base64 --decode > dados/lista_chamada.csv
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          LISTA_CHAMADA_CSV_B64: ${{ secrets.LISTA_CHAMADA_CSV_B64 }}
+
+      - name: Reavaliar dissertativas
+        run: python backfill_dissertativas.py $RAS
+        env:
+          RAS: ${{ inputs.ras }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
