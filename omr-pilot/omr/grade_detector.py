@@ -163,7 +163,24 @@ def localizar_bolhas(
     tolerancia_linha = (float(np.median(gaps)) if gaps else 40.0) * 0.6
 
     colunas = [_selecionar_por_referencia(g, linhas_y, tolerancia_linha) for g in grupos]
-    return colunas
+    return _preencher_bolhas_ausentes(colunas, grupos, linhas_y)
+
+
+def _preencher_bolhas_ausentes(
+    colunas: list[list[Bolha | None]], grupos: list[list[Bolha]], linhas_y: list[float]
+) -> list[list[Bolha | None]]:
+    """O Hough as vezes nao detecta uma bolha (foto com sombra, bolha muito
+    preenchida). A posicao dela e previsivel pela grade (X mediano da coluna,
+    Y da linha), entao estimamos a bolha ausente em vez de abortar a prova
+    inteira - a leitura de preenchimento e feita nessa posicao estimada."""
+    raio = float(np.median([b.raio for g in grupos for b in g]))
+    preenchidas: list[list[Bolha | None]] = []
+    for coluna, grupo in zip(colunas, grupos):
+        x_coluna = float(np.median([b.x for b in grupo]))
+        preenchidas.append(
+            [b if b is not None else Bolha(x=x_coluna, y=linhas_y[i], raio=raio) for i, b in enumerate(coluna)]
+        )
+    return preenchidas
 
 
 def _fracao_escura(imagem_cinza: np.ndarray, bolha: Bolha) -> float:

@@ -131,8 +131,8 @@ def main() -> None:
 
         try:
             resultados = ler_respostas(imagem)
-        except ValueError as erro:
-            print(f"  ERRO ao processar OMR: {erro}. Pulando.")
+        except Exception as erro:  # uma prova problematica nao pode derrubar as demais
+            print(f"  ERRO ao processar OMR: {type(erro).__name__}: {erro}. Pulando.")
             continue
 
         respostas = [r.alternativa for r in resultados]
