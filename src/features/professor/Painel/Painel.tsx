@@ -28,7 +28,9 @@ import { exportarResultadosXlsx } from "../../../lib/exportarXlsx";
 import { formatarData, formatarNota, formatarPontoExtra, formatarTempo } from "../../../lib/format";
 import { useSessaoProfessor } from "../useSessaoProfessor";
 
-const DURACAO_ANIMACAO_CORRECAO_MS = 40_000;
+const DURACAO_ANIMACAO_CORRECAO_MS = 70_000;
+const DURACAO_MINIMA_SALVANDO_NOTA_MS = 1_500;
+const DURACAO_MENSAGEM_NOTA_CONFIRMADA_MS = 3_000;
 
 type Aba = "resultados" | "presenciais" | "lixeira";
 
@@ -154,6 +156,7 @@ export default function Painel() {
   const [notaDissertativaInput, setNotaDissertativaInput] = useState("");
   const [salvandoNotaDissertativa, setSalvandoNotaDissertativa] = useState(false);
   const [erroNotaDissertativa, setErroNotaDissertativa] = useState<string | null>(null);
+  const [notaConfirmada, setNotaConfirmada] = useState(false);
 
   const [disparandoCorrecao, setDisparandoCorrecao] = useState(false);
   const [aguardandoCorrecao, setAguardandoCorrecao] = useState(false);
@@ -284,13 +287,20 @@ export default function Painel() {
 
     setSalvandoNotaDissertativa(true);
     setErroNotaDissertativa(null);
+    setNotaConfirmada(false);
+    // Garante que a animacao seja visivel mesmo quando a gravacao e instantanea.
+    const tempoMinimo = new Promise((resolve) => window.setTimeout(resolve, DURACAO_MINIMA_SALVANDO_NOTA_MS));
     try {
       await confirmarNotaDissertativa(provaSelecionada.id, nota);
+      await tempoMinimo;
+      setNotaConfirmada(true);
+      window.setTimeout(() => setNotaConfirmada(false), DURACAO_MENSAGEM_NOTA_CONFIRMADA_MS);
       const atualizadas = await listarProvasPresenciais();
       setProvasPresenciais(atualizadas);
       const atualizada = atualizadas.find((p) => p.id === provaSelecionada.id) ?? null;
       setProvaSelecionada(atualizada);
     } catch {
+      await tempoMinimo;
       setErroNotaDissertativa("Não foi possível gravar a nota. Tente novamente.");
     } finally {
       setSalvandoNotaDissertativa(false);
@@ -591,6 +601,11 @@ export default function Painel() {
                     </button>
                   </div>
                   {salvandoNotaDissertativa && <BarraProgresso rotulo="Salvando nota..." />}
+                  {notaConfirmada && (
+                    <p className="emblema emblema-sucesso" role="status" style={{ marginBottom: 0 }}>
+                      Nota confirmada!
+                    </p>
+                  )}
                   {erroNotaDissertativa && <p className="mensagem-erro" style={{ marginBottom: 0 }}>{erroNotaDissertativa}</p>}
                 </div>
               </>
