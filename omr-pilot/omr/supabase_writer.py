@@ -82,25 +82,28 @@ def gravar_sugestao_dissertativa(
     o professor grava ao revisar/confirmar).
 
     Requer que a linha (ra, prova_tipo) ja exista - roda depois de
-    `gravar_resultado` no mesmo pipeline."""
+    `gravar_resultado` no mesmo pipeline.
+
+    Usa PATCH (nao upsert via POST): um upsert por POST monta a linha
+    candidata para o INSERT antes de checar o conflito, e as colunas nao
+    enviadas (nome, turma etc.) violariam as constraints NOT NULL mesmo
+    quando a linha ja existe."""
     url, chave = _config()
 
     linha = {
-        "ra": ra,
-        "prova_tipo": prova_tipo,
         "nota_dissertativa_sugerida": nota_sugerida_total,
         "dissertativas_ia": dissertativas_ia,
     }
 
-    resposta = requests.post(
+    resposta = requests.patch(
         f"{url}/rest/v1/{TABELA}",
         headers={
             "apikey": chave,
             "Authorization": f"Bearer {chave}",
             "Content-Type": "application/json",
-            "Prefer": "resolution=merge-duplicates,return=minimal",
+            "Prefer": "return=minimal",
         },
-        params={"on_conflict": "ra,prova_tipo"},
+        params={"ra": f"eq.{ra}", "prova_tipo": f"eq.{prova_tipo}"},
         json=linha,
         timeout=30,
     )

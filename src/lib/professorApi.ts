@@ -249,6 +249,12 @@ export async function confirmarNotaDissertativa(id: string, nota: number): Promi
   if (error) throw error;
 }
 
+export async function dispararCorrecaoProvas(): Promise<void> {
+  const { data, error } = await supabase.functions.invoke("disparar-correcao-provas", { method: "POST" });
+  if (error) throw error;
+  if (data?.error) throw new Error(data.error);
+}
+
 export async function buscarRespostasTentativa(tentativaId: string): Promise<RespostaQuestaoPainel[]> {
   const { data, error } = await supabase
     .from("respostas")

@@ -7,6 +7,7 @@ import {
   buscarRespostasTentativa,
   buscarTentativasDetalhe,
   confirmarNotaDissertativa,
+  dispararCorrecaoProvas,
   esvaziarLixeira,
   listarDesempenhoQuestoes,
   listarLixeira,
@@ -151,6 +152,9 @@ export default function Painel() {
   const [salvandoNotaDissertativa, setSalvandoNotaDissertativa] = useState(false);
   const [erroNotaDissertativa, setErroNotaDissertativa] = useState<string | null>(null);
 
+  const [disparandoCorrecao, setDisparandoCorrecao] = useState(false);
+  const [mensagemDisparo, setMensagemDisparo] = useState<string | null>(null);
+
   const [alunoSelecionado, setAlunoSelecionado] = useState<AlunoSelecionado | null>(null);
   const [detalheTentativas, setDetalheTentativas] = useState<TentativaDetalhePainel[]>([]);
   const [detalheRespostas, setDetalheRespostas] = useState<RespostaQuestaoPainel[]>([]);
@@ -234,6 +238,21 @@ export default function Painel() {
     setTurmaPresencial("");
     setProvaSelecionada(null);
     carregarPresenciais();
+  }
+
+  async function handleDispararCorrecao() {
+    setDisparandoCorrecao(true);
+    setMensagemDisparo(null);
+    try {
+      await dispararCorrecaoProvas();
+      setMensagemDisparo(
+        "Correção disparada! Leva alguns minutos - volte aqui e clique em atualizar depois.",
+      );
+    } catch {
+      setMensagemDisparo("Não foi possível disparar a correção. Tente novamente em instantes.");
+    } finally {
+      setDisparandoCorrecao(false);
+    }
   }
 
   useEffect(() => {
@@ -848,10 +867,36 @@ export default function Painel() {
 
           {aba === "presenciais" && (
             <>
-              <p className="texto-suave" style={{ marginTop: 0, marginBottom: 20 }}>
-                Resultados de provas presenciais corrigidas automaticamente (leitura de bolhas + identificação por
-                RA). Clique em um aluno para ver o detalhamento completo.
-              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12, marginBottom: 20 }}>
+                <p className="texto-suave" style={{ margin: 0 }}>
+                  Resultados de provas presenciais corrigidas automaticamente (leitura de bolhas + identificação por
+                  RA). Clique em um aluno para ver o detalhamento completo.
+                </p>
+                <div style={{ textAlign: "right" }}>
+                  <button
+                    type="button"
+                    className="botao botao-secundario"
+                    onClick={carregarPresenciais}
+                    disabled={carregandoPresenciais}
+                    style={{ marginRight: 8 }}
+                  >
+                    Atualizar
+                  </button>
+                  <button
+                    type="button"
+                    className="botao botao-primario"
+                    onClick={handleDispararCorrecao}
+                    disabled={disparandoCorrecao}
+                  >
+                    {disparandoCorrecao ? "Disparando..." : "Corrigir provas"}
+                  </button>
+                  {mensagemDisparo && (
+                    <p className="texto-suave" style={{ margin: "6px 0 0", fontSize: "0.8rem", maxWidth: 260 }}>
+                      {mensagemDisparo}
+                    </p>
+                  )}
+                </div>
+              </div>
 
               {!carregandoPresenciais && !erroPresenciais && provasPresenciais.length > 0 && (
                 <div
