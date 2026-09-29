@@ -32,6 +32,7 @@ from omr.gabarito import extrair_respostas_corretas, obter_texto_documento  # no
 from omr.grade_detector import NUM_QUESTOES, ler_respostas  # noqa: E402
 from omr.roster import buscar_por_nome, carregar_lista_chamada  # noqa: E402
 from omr.sheets_writer import adicionar_linha, montar_linha  # noqa: E402
+from omr.supabase_writer import gravar_resultado  # noqa: E402
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive.readonly",
@@ -151,6 +152,21 @@ def main() -> None:
         )
         adicionar_linha(SPREADSHEET_ID, linha)
         print("  Gravado na planilha.")
+
+        try:
+            gravar_resultado(
+                ra=aluno.ra,
+                nome=aluno.nome,
+                turma=TURMA_PADRAO,
+                prova_tipo=PROVA_TIPO_PADRAO,
+                respostas=respostas,
+                acertos=acertos,
+                nota_objetiva=nota_objetiva,
+                observacoes="Ambigua(s) - conferir manualmente" if ha_ambigua else "",
+            )
+            print("  Gravado no Supabase (painel do professor).")
+        except Exception as erro:  # nao interrompe o pipeline se o Supabase falhar - a planilha ja foi gravada
+            print(f"  AVISO: falha ao gravar no Supabase: {erro}")
 
     if not houve_pendente:
         print("\nNenhuma prova nova para corrigir (todas ja estavam na planilha).")

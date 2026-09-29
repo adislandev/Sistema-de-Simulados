@@ -23,6 +23,7 @@ from omr.gabarito import extrair_respostas_corretas, obter_texto_documento  # no
 from omr.grade_detector import NUM_QUESTOES, ler_respostas  # noqa: E402
 from omr.roster import buscar_por_nome, carregar_lista_chamada  # noqa: E402
 from omr.sheets_writer import adicionar_linha, montar_linha  # noqa: E402
+from omr.supabase_writer import gravar_resultado  # noqa: E402
 
 SPREADSHEET_ID = "1obdaU2JMsOJBUhdO238mIGHnWk7umoLxFFatj8QWPOY"
 GABARITO_DOC_ID = "1UfJLJusRVFMkzWmE3lCL9fZ-548LqmyzXhM4oUb2RWM"
@@ -92,6 +93,21 @@ def main() -> None:
         resultado = adicionar_linha(SPREADSHEET_ID, linha)
         intervalo = resultado.get("updates", {}).get("updatedRange", "?")
         print(f"\nGravado na planilha em: {intervalo}")
+
+        try:
+            gravar_resultado(
+                ra=aluno.ra,
+                nome=aluno.nome,
+                turma=args.turma,
+                prova_tipo=PROVA_TIPO_PADRAO,
+                respostas=respostas,
+                acertos=acertos,
+                nota_objetiva=nota_objetiva,
+                observacoes=observacoes,
+            )
+            print("Gravado no Supabase (painel do professor).")
+        except Exception as erro:  # nao interrompe o script se o Supabase falhar - a planilha ja foi gravada
+            print(f"AVISO: falha ao gravar no Supabase: {erro}")
     else:
         print("\n(dry-run: nada foi gravado na planilha; use --gravar para escrever de fato)")
 
