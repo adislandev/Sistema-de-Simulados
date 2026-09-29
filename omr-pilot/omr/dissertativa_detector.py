@@ -22,8 +22,14 @@ import numpy as np
 ALTURA_REFERENCIA = 5556.0  # mesma referencia de calibracao usada no grade_detector
 
 # Faixa de altura (em px, na resolucao de referencia) esperada para a barra
-# cinza do titulo da questao dissertativa.
-ALTURA_BARRA_MIN = 100
+# cinza do titulo da questao dissertativa. O minimo foi reduzido de 100 para
+# 40 apos observar, em digitalizacoes reais (fotocopia com contraste mais
+# claro que a amostra de calibracao), barras validas medindo entre 53 e 93px
+# pelo perfil de escurecimento - o limiar de 100 as descartava e perdia a
+# questao inteira sem nenhum aviso. Ruido de pagina (sombras, marcas) fica
+# bem abaixo disso (poucos pixels de altura), entao a margem de seguranca
+# continua ampla.
+ALTURA_BARRA_MIN = 40
 ALTURA_BARRA_MAX = 260
 
 # Fracao minima de colunas "escuras" dentro da faixa candidata para considerar
@@ -79,12 +85,17 @@ def _e_barra_titulo(cinza: np.ndarray, y0: int, y1: int, margem_lateral: int) ->
     return fracao_escura >= FRACAO_COLUNAS_ESCURAS_MIN
 
 
-def _borda_lateral_caixa(cinza: np.ndarray, y0: int, y1: int) -> tuple[int, int]:
+def _borda_lateral_caixa(cinza: np.ndarray, barra_y0: int, barra_y1: int) -> tuple[int, int]:
     """Localiza as bordas verticais (esquerda/direita) da caixa de resposta
-    pautada, a partir das colunas mais escuras dentro da faixa vertical dada."""
-    faixa = cinza[y0:y1, :]
+    pautada, a partir da extensao horizontal da PROPRIA barra de titulo
+    (que e solida e escura por toda a sua altura, ao contrario da caixa de
+    resposta abaixo dela, onde so as bordas fora e uma linha fina de
+    separacao da numeracao de linha cruzam o limiar de escurecimento - usar
+    a media de coluna sobre a altura inteira da caixa pegava essa linha fina
+    em vez da borda direita real, cortando o recorte so no canto esquerdo)."""
+    faixa = cinza[barra_y0:barra_y1, :]
     perfil_colunas = faixa.mean(axis=0)
-    escuras = np.where(perfil_colunas < 200)[0]
+    escuras = np.where(perfil_colunas < LIMIAR_CINZA_BARRA)[0]
     if len(escuras) < 2:
         return 0, cinza.shape[1]
     return int(escuras[0]), int(escuras[-1])
@@ -124,10 +135,10 @@ def localizar_blocos_dissertativas(imagem_bgr: np.ndarray) -> list[BlocoDisserta
         return []
 
     blocos: list[BlocoDissertativa] = []
-    for indice, (_barra_y0, barra_y1) in enumerate(barras):
+    for indice, (barra_y0, barra_y1) in enumerate(barras):
         y_inicio = barra_y1 + 1
         y_fim = barras[indice + 1][0] - 1 if indice + 1 < len(barras) else margem_rodape
-        x0, x1 = _borda_lateral_caixa(cinza, y_inicio, y_fim)
+        x0, x1 = _borda_lateral_caixa(cinza, barra_y0, barra_y1)
         blocos.append(
             BlocoDissertativa(
                 imagem=imagem_bgr[y_inicio:y_fim, x0:x1].copy(),
