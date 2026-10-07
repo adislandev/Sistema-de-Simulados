@@ -36,7 +36,7 @@ DEEPSEEK_MODEL = "deepseek-flash"
 
 CAMINHO_RUBRICA = Path(__file__).resolve().parent.parent.parent / "docs" / "rubrica-dissertativas-provas-presenciais.md"
 
-PROMPT_SISTEMA = """Você é um assistente de correção de provas de Lógica Computacional. Sua única tarefa é TRANSCREVER literalmente o que está escrito na imagem e avaliar a transcrição contra uma rubrica, para um professor revisar depois.
+PROMPT_SISTEMA = """Você é um assistente de correção de provas de {disciplina}. Sua única tarefa é TRANSCREVER literalmente o que está escrito na imagem e avaliar a transcrição contra uma rubrica, para um professor revisar depois.
 
 REGRAS OBRIGATÓRIAS (violar qualquer uma invalida a resposta):
 
@@ -142,6 +142,7 @@ def avaliar_dissertativa(
     numero_questao: int,
     valor_questao: float = 1.5,
     rubrica_texto: str | None = None,
+    disciplina: str = "Lógica Computacional",
 ) -> ResultadoAvaliacaoIA:
     """Envia o recorte da questao dissertativa (ver dissertativa_detector.py)
     para avaliacao via IA com visao. Sempre retorna uma SUGESTAO - a gravacao
@@ -156,7 +157,7 @@ def avaliar_dissertativa(
         "temperature": 0,
         "response_format": {"type": "json_object"},
         "messages": [
-            {"role": "system", "content": PROMPT_SISTEMA},
+            {"role": "system", "content": PROMPT_SISTEMA.replace("{disciplina}", disciplina)},
             {
                 "role": "user",
                 "content": [
