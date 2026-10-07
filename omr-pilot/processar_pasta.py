@@ -1,6 +1,8 @@
 """Fase 3: verificacao periodica da pasta do Drive com as provas digitalizadas.
 
-Para cada PDF de prova ainda nao corrigido (nome do aluno ainda nao presente
+Corrige cada disciplina/turma configurada em omr/disciplinas.py (pasta do
+Drive, planilha, gabarito, lista de chamada e rubrica proprios). Para cada
+PDF de prova ainda nao corrigido (nome do aluno ainda nao presente
 na planilha), baixa o arquivo, renderiza a primeira pagina (grade de bolhas),
 roda o OMR, identifica o aluno por RA, calcula acertos contra o gabarito
 oficial e grava uma linha na planilha real.
@@ -17,6 +19,7 @@ from __future__ import annotations
 import io
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 import cv2
@@ -28,6 +31,8 @@ from googleapiclient.http import MediaIoBaseDownload
 
 sys.path.insert(0, str(Path(__file__).parent))
 from omr.avaliacao import calcular_nota_objetiva  # noqa: E402
+from omr.disciplinas import DISCIPLINAS, LOGICA, Disciplina  # noqa: E402
+from omr.dissertativa_ia import carregar_rubrica  # noqa: E402
 from omr.dissertativa_pipeline import avaliar_dissertativas_da_prova  # noqa: E402
 from omr.gabarito import extrair_respostas_corretas, obter_texto_documento  # noqa: E402
 from omr.grade_detector import NUM_QUESTOES, ler_respostas  # noqa: E402
@@ -40,13 +45,6 @@ SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
 ]
 
-PASTA_ALUNOS_ID = "1nsLuzXqzTCvLiUOQZqL0gEBvPi3sIcwW"
-SPREADSHEET_ID = "1obdaU2JMsOJBUhdO238mIGHnWk7umoLxFFatj8QWPOY"
-GABARITO_DOC_ID = "1UfJLJusRVFMkzWmE3lCL9fZ-548LqmyzXhM4oUb2RWM"
-LISTA_CHAMADA_CSV = Path(__file__).parent / "dados" / "lista_chamada.csv"
-ARQUIVO_LISTA_CHAMADA = "Lista de Presença.pdf"
-TURMA_PADRAO = "01SI-NOTA"
-PROVA_TIPO_PADRAO = "Lógica Computacional"
 DPI_RENDER = 400
 
 
@@ -57,12 +55,12 @@ def _credenciais(scopes: list[str]) -> service_account.Credentials:
     return service_account.Credentials.from_service_account_file(caminho, scopes=scopes)
 
 
-def _listar_provas(drive) -> list[dict]:
+def _listar_provas(drive, disciplina: Disciplina) -> list[dict]:
     resp = drive.files().list(
-        q=f"'{PASTA_ALUNOS_ID}' in parents and mimeType='application/pdf'",
+        q=f"'{disciplina.pasta_alunos_id}' in parents and mimeType='application/pdf'",
         fields="files(id,name)",
     ).execute()
-    return [a for a in resp.get("files", []) if a["name"] != ARQUIVO_LISTA_CHAMADA]
+    return [a for a in resp.get("files", []) if a["name"] not in disciplina.arquivos_ignorados]
 
 
 def _nomes_ja_na_planilha(spreadsheet_id: str, creds) -> set[str]:
@@ -84,6 +82,19 @@ def _baixar_pdf(drive, file_id: str) -> bytes:
     return buf.getvalue()
 
 
+def _carregar_alunos(drive, disciplina: Disciplina):
+    if disciplina.lista_chamada_drive_id:
+        conteudo = _baixar_pdf(drive, disciplina.lista_chamada_drive_id)
+        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as arq:
+            arq.write(conteudo)
+            caminho = arq.name
+        try:
+            return carregar_lista_chamada(caminho)
+        finally:
+            os.unlink(caminho)
+    return carregar_lista_chamada(disciplina.lista_chamada_csv)
+
+
 def _renderizar_paginas(pdf_bytes: bytes) -> list[np.ndarray]:
     doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
     paginas = []
@@ -95,20 +106,24 @@ def _renderizar_paginas(pdf_bytes: bytes) -> list[np.ndarray]:
     return paginas
 
 
-def avaliar_e_gravar_dissertativas(paginas: list[np.ndarray], ra: str) -> bool:
+def avaliar_e_gravar_dissertativas(paginas: list[np.ndarray], ra: str, disciplina: Disciplina = LOGICA) -> bool:
     """Avalia as dissertativas via IA e grava a sugestao no Supabase. Nunca
     levanta excecao (a nota objetiva ja foi gravada); retorna se deu certo."""
     if not os.environ.get("DEEPSEEK_API_KEY"):
         print("  DEEPSEEK_API_KEY nao definida - pulando sugestao de IA para as dissertativas.")
         return False
     try:
-        nota_sugerida, dissertativas_ia = avaliar_dissertativas_da_prova(paginas)
+        nota_sugerida, dissertativas_ia = avaliar_dissertativas_da_prova(
+            paginas,
+            rubrica_texto=carregar_rubrica(disciplina.rubrica),
+            disciplina=disciplina.nome,
+        )
         print(f"  Dissertativas detectadas: {len(dissertativas_ia)} (paginas: {len(paginas)})")
         for d in dissertativas_ia:
             print(f"    Q{d['questao']}: pendente={d.get('pendente_revisao_manual')} nota={d.get('nota_sugerida_total')} obs={d.get('observacao')!r}")
         gravar_sugestao_dissertativa(
             ra=ra,
-            prova_tipo=PROVA_TIPO_PADRAO,
+            prova_tipo=disciplina.prova_tipo,
             nota_sugerida_total=nota_sugerida,
             dissertativas_ia=dissertativas_ia,
         )
@@ -119,23 +134,20 @@ def avaliar_e_gravar_dissertativas(paginas: list[np.ndarray], ra: str) -> bool:
         return False
 
 
-def main() -> None:
-    creds = _credenciais(SCOPES)
-    drive = build("drive", "v3", credentials=creds)
-
-    ja_processados = _nomes_ja_na_planilha(SPREADSHEET_ID, creds)
-    provas = _listar_provas(drive)
+def processar_disciplina(creds, drive, disciplina: Disciplina) -> None:
+    ja_processados = _nomes_ja_na_planilha(disciplina.planilha_id, creds)
+    provas = _listar_provas(drive, disciplina)
 
     if not provas:
         print("Nenhuma prova encontrada na pasta.")
         return
 
-    alunos = carregar_lista_chamada(LISTA_CHAMADA_CSV)
-    gabarito_texto = obter_texto_documento(os.environ["GOOGLE_APPLICATION_CREDENTIALS"], GABARITO_DOC_ID)
+    alunos = _carregar_alunos(drive, disciplina)
+    gabarito_texto = obter_texto_documento(os.environ["GOOGLE_APPLICATION_CREDENTIALS"], disciplina.gabarito_doc_id)
     gabarito = extrair_respostas_corretas(gabarito_texto, NUM_QUESTOES)
 
     try:
-        pendentes_sugestao = ras_sem_sugestao(PROVA_TIPO_PADRAO)
+        pendentes_sugestao = ras_sem_sugestao(disciplina.prova_tipo)
     except Exception as erro:
         print(f"AVISO: nao consegui consultar RAs sem sugestao das dissertativas: {erro}")
         pendentes_sugestao = set()
@@ -155,7 +167,7 @@ def main() -> None:
             if aluno.ra in pendentes_sugestao:
                 print(f"  Ja corrigida (RA {aluno.ra}), mas sem sugestao das dissertativas - tentando de novo so essa etapa.")
                 paginas = _renderizar_paginas(_baixar_pdf(drive, arquivo["id"]))
-                if not avaliar_e_gravar_dissertativas(paginas, aluno.ra):
+                if not avaliar_e_gravar_dissertativas(paginas, aluno.ra, disciplina):
                     sem_sugestao_falhou.append(aluno.ra)
             else:
                 print(f"  Ja corrigida (RA {aluno.ra}, {aluno.nome}). Pulando.")
@@ -185,22 +197,22 @@ def main() -> None:
         linha = montar_linha(
             ra=aluno.ra,
             nome=aluno.nome,
-            turma=TURMA_PADRAO,
-            prova_tipo=PROVA_TIPO_PADRAO,
+            turma=disciplina.turma,
+            prova_tipo=disciplina.prova_tipo,
             respostas=respostas,
             acertos=acertos,
             nota_objetiva=nota_objetiva,
             observacoes="Ambigua(s) - conferir manualmente" if ha_ambigua else "",
         )
-        adicionar_linha(SPREADSHEET_ID, linha)
+        adicionar_linha(disciplina.planilha_id, linha)
         print("  Gravado na planilha.")
 
         try:
             gravar_resultado(
                 ra=aluno.ra,
                 nome=aluno.nome,
-                turma=TURMA_PADRAO,
-                prova_tipo=PROVA_TIPO_PADRAO,
+                turma=disciplina.turma,
+                prova_tipo=disciplina.prova_tipo,
                 respostas=respostas,
                 acertos=acertos,
                 nota_objetiva=nota_objetiva,
@@ -212,13 +224,31 @@ def main() -> None:
             sem_sugestao_falhou.append(aluno.ra)
             continue
 
-        if not avaliar_e_gravar_dissertativas(paginas, aluno.ra):
+        if not avaliar_e_gravar_dissertativas(paginas, aluno.ra, disciplina):
             sem_sugestao_falhou.append(aluno.ra)
 
     if not houve_pendente:
         print("\nNenhuma prova nova para corrigir (todas ja estavam na planilha).")
     if sem_sugestao_falhou:
         print(f"\nAVISO: {len(sem_sugestao_falhou)} aluno(s) ainda sem sugestao das dissertativas (RAs: {', '.join(sem_sugestao_falhou)}). Clique em Corrigir provas de novo para tentar outra vez.")
+
+
+
+def main() -> None:
+    creds = _credenciais(SCOPES)
+    drive = build("drive", "v3", credentials=creds)
+
+    falhas: list[str] = []
+    for disciplina in DISCIPLINAS:
+        print(f"\n##### {disciplina.nome} - turma {disciplina.turma} #####")
+        try:
+            processar_disciplina(creds, drive, disciplina)
+        except Exception as erro:  # uma disciplina com problema (ex.: pasta nao compartilhada) nao derruba as demais
+            print(f"ERRO ao processar {disciplina.nome}: {type(erro).__name__}: {erro}")
+            falhas.append(disciplina.nome)
+
+    if falhas:
+        raise SystemExit(f"Falha em: {', '.join(falhas)}.")
 
 
 if __name__ == "__main__":

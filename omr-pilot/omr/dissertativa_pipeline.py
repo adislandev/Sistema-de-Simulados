@@ -16,7 +16,7 @@ from .grade_detector import localizar_bolhas_por_reticulado
 from .dissertativa_ia import ResultadoAvaliacaoIA, avaliar_dissertativa
 
 VALOR_POR_QUESTAO_DISSERTATIVA = 1.5
-NUMERO_PRIMEIRA_DISSERTATIVA = 9  # Q9 e Q10 na prova de Logica Computacional
+NUMERO_PRIMEIRA_DISSERTATIVA = 9  # Q9 e Q10 nas provas presenciais (mesmo modelo de prova em todas as disciplinas)
 
 # Plano B quando a barra de titulo nao e detectada em nenhuma pagina (foto/scan
 # claro demais, com sombras): recorte por posicao, no layout padrao da prova -
@@ -62,7 +62,11 @@ def _resultado_para_dict(numero_questao: int, resultado: ResultadoAvaliacaoIA) -
     return dados
 
 
-def avaliar_dissertativas_da_prova(paginas: list[np.ndarray]) -> tuple[float | None, list[dict[str, Any]]]:
+def avaliar_dissertativas_da_prova(
+    paginas: list[np.ndarray],
+    rubrica_texto: str | None = None,
+    disciplina: str = "Lógica Computacional",
+) -> tuple[float | None, list[dict[str, Any]]]:
     """Recebe as paginas ja renderizadas da prova (em ordem) e retorna
     (nota_sugerida_total, detalhe_por_questao). nota_sugerida_total e a soma
     das notas sugeridas pela IA disponiveis - fica None se nenhuma questao
@@ -83,6 +87,8 @@ def avaliar_dissertativas_da_prova(paginas: list[np.ndarray]) -> tuple[float | N
                 imagem,
                 numero_questao=numero_atual,
                 valor_questao=VALOR_POR_QUESTAO_DISSERTATIVA,
+                rubrica_texto=rubrica_texto,
+                disciplina=disciplina,
             )
             detalhes.append(_resultado_para_dict(numero_atual, resultado))
         except Exception as erro:  # nao interrompe as outras questoes/paginas

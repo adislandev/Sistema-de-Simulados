@@ -10,7 +10,9 @@ nota objetiva já gravada.
 
 Uso:
     GOOGLE_APPLICATION_CREDENTIALS=<caminho> DEEPSEEK_API_KEY=<chave> \
-        python backfill_dissertativas.py <RA1> <RA2> ...
+        python backfill_dissertativas.py [--disciplina=logica|ergonomia] <RA1> <RA2> ...
+
+Sem --disciplina, usa Logica Computacional.
 """
 from __future__ import annotations
 
@@ -20,34 +22,37 @@ from pathlib import Path
 from googleapiclient.discovery import build
 
 sys.path.insert(0, str(Path(__file__).parent))
-from omr.roster import buscar_por_nome, carregar_lista_chamada  # noqa: E402
+from omr.roster import buscar_por_nome  # noqa: E402
 from processar_pasta import (  # noqa: E402
-    ARQUIVO_LISTA_CHAMADA,
-    LISTA_CHAMADA_CSV,
-    PASTA_ALUNOS_ID,
-    PROVA_TIPO_PADRAO,
     SCOPES,
     _baixar_pdf,
+    _carregar_alunos,
     _credenciais,
+    _listar_provas,
     _renderizar_paginas,
     avaliar_e_gravar_dissertativas,
 )
+from omr.disciplinas import DISCIPLINAS  # noqa: E402
 
 
 def main() -> None:
-    ras_alvo = set(sys.argv[1:])
+    args = sys.argv[1:]
+    chave = "logica"
+    for a in list(args):
+        if a.startswith("--disciplina="):
+            chave = a.split("=", 1)[1]
+            args.remove(a)
+    disciplina = next((d for d in DISCIPLINAS if d.chave == chave), None)
+    if disciplina is None:
+        raise SystemExit(f"Disciplina desconhecida: {chave}. Opcoes: {', '.join(d.chave for d in DISCIPLINAS)}")
+    ras_alvo = set(args)
     if not ras_alvo:
         raise SystemExit("Informe pelo menos um RA: python backfill_dissertativas.py <RA1> <RA2> ...")
 
     creds = _credenciais(SCOPES)
     drive = build("drive", "v3", credentials=creds)
-    alunos = carregar_lista_chamada(LISTA_CHAMADA_CSV)
-
-    resp = drive.files().list(
-        q=f"'{PASTA_ALUNOS_ID}' in parents and mimeType='application/pdf'",
-        fields="files(id,name)",
-    ).execute()
-    provas = [a for a in resp.get("files", []) if a["name"] != ARQUIVO_LISTA_CHAMADA]
+    alunos = _carregar_alunos(drive, disciplina)
+    provas = _listar_provas(drive, disciplina)
 
     for arquivo in provas:
         nome_prova = Path(arquivo["name"]).stem
@@ -59,7 +64,7 @@ def main() -> None:
         pdf_bytes = _baixar_pdf(drive, arquivo["id"])
         paginas = _renderizar_paginas(pdf_bytes)
 
-        avaliar_e_gravar_dissertativas(paginas, aluno.ra)
+        avaliar_e_gravar_dissertativas(paginas, aluno.ra, disciplina)
         ras_alvo.discard(aluno.ra)
 
     if ras_alvo:
