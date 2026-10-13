@@ -27,22 +27,22 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 NOME_ABA = "Notas Finais"
 
 
-def _garantir_aba(servico, planilha_id: str) -> None:
+def garantir_aba(servico, planilha_id: str, nome: str = NOME_ABA) -> None:
     meta = servico.spreadsheets().get(
         spreadsheetId=planilha_id, fields="sheets.properties.title"
     ).execute()
-    if any(s["properties"]["title"] == NOME_ABA for s in meta["sheets"]):
+    if any(s["properties"]["title"] == nome for s in meta["sheets"]):
         return
     servico.spreadsheets().batchUpdate(
         spreadsheetId=planilha_id,
-        body={"requests": [{"addSheet": {"properties": {"title": NOME_ABA}}}]},  # entra no fim: a aba principal continua a primeira
+        body={"requests": [{"addSheet": {"properties": {"title": nome}}}]},  # entra no fim: a aba principal continua a primeira
     ).execute()
-    print(f"  Aba '{NOME_ABA}' criada.")
+    print(f"  Aba '{nome}' criada.")
 
 
 def gerar(servico, disciplina: Disciplina) -> None:
     tabela = montar_tabela(listar_resultados(disciplina.prova_tipo), disciplina.turma)
-    _garantir_aba(servico, disciplina.planilha_id)
+    garantir_aba(servico, disciplina.planilha_id)
     valores = servico.spreadsheets().values()
     valores.clear(spreadsheetId=disciplina.planilha_id, range=f"'{NOME_ABA}'!A:Z", body={}).execute()
     # RAW: numeros ficam numericos sem depender da configuracao regional (virgula/ponto) da planilha
