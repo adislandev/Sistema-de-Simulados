@@ -36,7 +36,7 @@ const GLOSSARIO: { termo: string; texto: string }[] = [
   },
   {
     termo: "Simulado",
-    texto: "Ponto extra do simulado da disciplina: média das 3 primeiras tentativas ÷ 10 (máximo 1,0). Só existe com as 3 tentativas finalizadas; com 1 ou 2 fica em branco. Depende do vínculo do cadastro do simulado com o RA (veja “Vínculos” abaixo).",
+    texto: "Ponto extra do simulado da disciplina: média das 3 primeiras tentativas ÷ 10 (máximo 1,0). Só existe com as 3 tentativas finalizadas; com 1 ou 2 fica em branco. Se o aluno tem mais de um cadastro no simulado, as tentativas de todos os cadastros são somadas e valem as 3 primeiras, por data. Depende do vínculo do cadastro do simulado com o RA (veja “Vínculos” abaixo).",
   },
   {
     termo: "Nota N1 (com simulado)",
@@ -185,6 +185,11 @@ function Detalhe({ linha }: { linha: NotaN1 }) {
               Sem simulado: <strong>{f(linha.nota_n1_sem_simulado)}</strong>
               {(linha.excedente_sem_simulado ?? 0) > 0 && <> (excedente {f(linha.excedente_sem_simulado)})</>}
             </p>
+            {(linha.cadastros_simulado ?? 0) > 1 && (
+              <p className="texto-suave" style={{ margin: "4px 0 0", fontSize: "0.8rem" }}>
+                Simulado: foram somadas as tentativas de {linha.cadastros_simulado} cadastros do mesmo aluno (valem as 3 primeiras, por data).
+              </p>
+            )}
             <p style={{ margin: "4px 0 0" }}>
               Com simulado: {f(linha.total_bruto_sem_simulado)} + {f(pontoSimulado)} = {f(linha.total_bruto_com_simulado)} →{" "}
               <strong>{f(linha.nota_n1_com_simulado)}</strong>

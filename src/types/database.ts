@@ -160,6 +160,7 @@ export interface NotaN1 {
   nota_n1_com_simulado: number | null;
   excedente_com_simulado: number | null;
   situacao: SituacaoN1;
+  cadastros_simulado: number | null; // quantos cadastros do simulado tiveram tentativas somadas
 }
 
 export type StatusVinculo = "sugerido" | "ambiguo" | "sem_correspondencia" | "confirmado" | "rejeitado";

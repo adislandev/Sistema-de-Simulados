@@ -290,6 +290,7 @@ export async function listarNotasN1(): Promise<NotaN1[]> {
     extra_manual: numeroOuNulo(l.extra_manual),
     ponto_simulado: numeroOuNulo(l.ponto_simulado),
     tentativas_validas: numeroOuNulo(l.tentativas_validas),
+    cadastros_simulado: numeroOuNulo(l.cadastros_simulado),
     total_bruto_sem_simulado: numeroOuNulo(l.total_bruto_sem_simulado),
     nota_n1_sem_simulado: numeroOuNulo(l.nota_n1_sem_simulado),
     excedente_sem_simulado: numeroOuNulo(l.excedente_sem_simulado),
