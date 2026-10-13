@@ -1,0 +1,52 @@
+name: OMR - Levar a N1 para o sistema
+
+# 1) copia atividades + extra manual da planilha (abas "Atividades N1" e "Nota N1")
+#    para o Supabase;
+# 2) sugere o vinculo aluno do simulado <-> RA (por nome) para o professor
+#    validar no sistema. Nunca altera vinculos ja confirmados/rejeitados.
+on:
+  workflow_dispatch:
+    inputs:
+      simular_vinculos:
+        description: "Sugerir vinculos so em simulacao (nao grava alunos_ra)"
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  n1-sistema:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: omr-pilot
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Preparar credenciais (a partir de Secrets)
+        run: printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/service-account.json"
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+      - name: Importar atividades e extra manual (planilha para Supabase)
+        run: python sincronizar_n1_supabase.py
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Sugerir vínculos do simulado com o RA
+        run: |
+          ARGS=""
+          if [ "$SIMULAR" = "true" ]; then ARGS="--simular"; fi
+          python sugerir_vinculos_simulado.py $ARGS
+        env:
+          SIMULAR: ${{ inputs.simular_vinculos }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

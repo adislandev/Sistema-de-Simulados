@@ -171,3 +171,42 @@ def atualizar_objetivas(
         },
         timeout=30,
     )
+
+
+def listar_tabela(tabela: str, params: dict[str, str]) -> list[dict[str, Any]]:
+    """GET paginado (o PostgREST limita 1000 linhas por resposta)."""
+    url, chave = _config()
+    linhas: list[dict[str, Any]] = []
+    tamanho = 1000
+    while True:
+        resposta = requisitar(
+            "GET",
+            f"{url}/rest/v1/{tabela}",
+            headers={"apikey": chave, "Authorization": f"Bearer {chave}"},
+            params={**params, "limit": str(tamanho), "offset": str(len(linhas))},
+            timeout=30,
+        )
+        bloco = resposta.json()
+        linhas.extend(bloco)
+        if len(bloco) < tamanho:
+            return linhas
+
+
+def upsert_linhas(tabela: str, linhas: list[dict[str, Any]], on_conflict: str) -> None:
+    """Upsert em lote (todas as linhas precisam ter as mesmas chaves)."""
+    if not linhas:
+        return
+    url, chave = _config()
+    requisitar(
+        "POST",
+        f"{url}/rest/v1/{tabela}",
+        headers={
+            "apikey": chave,
+            "Authorization": f"Bearer {chave}",
+            "Content-Type": "application/json",
+            "Prefer": "resolution=merge-duplicates,return=minimal",
+        },
+        params={"on_conflict": on_conflict},
+        json=linhas,
+        timeout=60,
+    )
