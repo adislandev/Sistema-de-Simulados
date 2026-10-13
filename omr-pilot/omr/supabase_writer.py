@@ -123,3 +123,51 @@ def ras_sem_sugestao(prova_tipo: str) -> set[str]:
         timeout=30,
     )
     return {linha["ra"] for linha in resposta.json()}
+
+
+def listar_resultados(prova_tipo: str) -> list[dict[str, Any]]:
+    """Todas as linhas da prova, com as colunas necessarias para comparar com
+    a planilha (inclui as de dissertativa so para relatorio - nunca sao
+    alteradas pela sincronizacao)."""
+    url, chave = _config()
+    resposta = requisitar(
+        "GET",
+        f"{url}/rest/v1/{TABELA}",
+        headers={"apikey": chave, "Authorization": f"Bearer {chave}"},
+        params={
+            "select": "ra,nome,respostas_objetivas,acertos,nota_objetiva,nota_dissertativa,dissertativa_revisada_em",
+            "prova_tipo": f"eq.{prova_tipo}",
+        },
+        timeout=30,
+    )
+    return resposta.json()
+
+
+def atualizar_objetivas(
+    ra: str,
+    prova_tipo: str,
+    respostas: list[str | None],
+    acertos: int,
+    nota_objetiva: float,
+) -> None:
+    """Atualiza SO as colunas das objetivas de uma linha existente (PATCH).
+    Nunca envia nota_dissertativa, dissertativa_revisada_em nem as sugestoes
+    da IA - essas pertencem ao sistema (confirmadas pelo professor)."""
+    url, chave = _config()
+    requisitar(
+        "PATCH",
+        f"{url}/rest/v1/{TABELA}",
+        headers={
+            "apikey": chave,
+            "Authorization": f"Bearer {chave}",
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal",
+        },
+        params={"ra": f"eq.{ra}", "prova_tipo": f"eq.{prova_tipo}"},
+        json={
+            "respostas_objetivas": [r or None for r in respostas],
+            "acertos": acertos,
+            "nota_objetiva": nota_objetiva,
+        },
+        timeout=30,
+    )
