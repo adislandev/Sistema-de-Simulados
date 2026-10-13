@@ -81,6 +81,26 @@ def _limpar_e_garantir(servico, planilha_id: str, aba: str) -> None:
     servico.spreadsheets().values().clear(spreadsheetId=planilha_id, range=f"'{aba}'!A:Z", body={}).execute()
 
 
+def _separador_formulas(servico, planilha_id: str) -> str:
+    """Descobre o separador de argumentos que a planilha aceita ("," ou ";"):
+    depende da configuracao regional (planilhas em portugues usam ";"). Testa
+    escrevendo uma formula de prova numa celula e lendo o resultado."""
+    valores = servico.spreadsheets().values()
+    celula = f"'{ABA_ATIVIDADES}'!Z1"
+    try:
+        for sep in (",", ";"):
+            valores.update(
+                spreadsheetId=planilha_id, range=celula, valueInputOption="USER_ENTERED",
+                body={"values": [[f"=ROUND(SUM(1{sep}2){sep}0)"]]},
+            ).execute()
+            lido = valores.get(spreadsheetId=planilha_id, range=celula, valueRenderOption="UNFORMATTED_VALUE").execute()
+            if lido.get("values", [[None]])[0][0] == 3:
+                return sep
+        raise RuntimeError("A planilha nao aceitou formulas com ',' nem com ';'.")
+    finally:
+        valores.clear(spreadsheetId=planilha_id, range=celula, body={}).execute()
+
+
 def gerar(servico, drive, disciplina: Disciplina) -> None:
     pid = disciplina.planilha_id
     valores = servico.spreadsheets().values()
@@ -95,9 +115,11 @@ def gerar(servico, drive, disciplina: Disciplina) -> None:
         print(f"  AVISO: {aviso}")
 
     base = atividades or Atividades(nomes=[])
-    tabela = tabela_atividades(base)
-    col_soma = letra_coluna(3 + len(base.nomes))
     _limpar_e_garantir(servico, pid, ABA_ATIVIDADES)
+    sep = _separador_formulas(servico, pid)
+    print(f"  Separador de formulas da planilha: {sep!r}")
+    tabela = tabela_atividades(base, sep)
+    col_soma = letra_coluna(3 + len(base.nomes))
     ultima_dado = letra_coluna(2 + len(base.nomes))
     n = len(tabela)
     corpo = [linha[:-1] for linha in tabela]  # sem a coluna de soma (formula)
@@ -120,7 +142,7 @@ def gerar(servico, drive, disciplina: Disciplina) -> None:
     linhas = linhas_nota_n1(listar_resultados(disciplina.prova_tipo), atividades, disciplina.turma, extras)
     _limpar_e_garantir(servico, pid, ABA_NOTA_N1)
     ultimo = len(linhas) + 1
-    formulas = [formulas_linha(i, col_soma) for i in range(2, ultimo + 1)]
+    formulas = [formulas_linha(i, col_soma, sep) for i in range(2, ultimo + 1)]
     ab = f"'{ABA_NOTA_N1}'"
     servico.spreadsheets().values().batchUpdate(spreadsheetId=pid, body={
         "valueInputOption": "RAW",

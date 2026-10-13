@@ -38,14 +38,14 @@ def letra_coluna(indice: int) -> str:
     return texto
 
 
-def tabela_atividades(atividades: Atividades) -> list[list]:
+def tabela_atividades(atividades: Atividades, sep: str = ",") -> list[list]:
     """RA, Nome, Status, <atividades...>, Soma (a Soma e preenchida com formula
     pelo script; aqui vai como texto da formula)."""
     cabecalho = ["RA", "Nome", "Status", *atividades.nomes, "Soma das atividades"]
     primeira, ultima = letra_coluna(3), letra_coluna(2 + len(atividades.nomes))
     tabela = [cabecalho]
     for i, aluno in enumerate(sorted(atividades.alunos, key=lambda a: a.nome.upper()), start=2):
-        formula = f"=ROUND(SUM({primeira}{i}:{ultima}{i}),2)" if atividades.nomes else 0
+        formula = f"=ROUND(SUM({primeira}{i}:{ultima}{i}){sep}2)" if atividades.nomes else 0
         tabela.append([aluno.ra, aluno.nome, aluno.status, *["" if n is None else n for n in aluno.notas], formula])
     return tabela
 
@@ -76,8 +76,10 @@ def linhas_nota_n1(
     return linhas
 
 
-def formulas_linha(n: int, col_soma_atividades: str) -> dict[str, str]:
-    """Formulas (sintaxe da API: ingles, virgula) da linha `n` da aba Nota N1."""
+def formulas_linha(n: int, col_soma_atividades: str, sep: str = ",") -> dict[str, str]:
+    """Formulas da linha `n` da aba Nota N1. `sep` e o separador de argumentos da
+    planilha ("," ou ";" - planilhas em portugues usam ";"); nenhum texto das
+    formulas tem virgula, entao a troca e segura."""
     atividades = (
         f"=IFERROR(INDEX('{ABA_ATIVIDADES}'!${col_soma_atividades}:${col_soma_atividades},"
         f"MATCH($A{n},'{ABA_ATIVIDADES}'!$A:$A,0)),\"\")"
@@ -86,7 +88,7 @@ def formulas_linha(n: int, col_soma_atividades: str) -> dict[str, str]:
         f"=IFERROR(IF(INDEX('{ABA_NOTAS_FINAIS}'!$F:$F,MATCH($A{n},'{ABA_NOTAS_FINAIS}'!$A:$A,0))=\"\","
         f"\"\",INDEX('{ABA_NOTAS_FINAIS}'!$F:$F,MATCH($A{n},'{ABA_NOTAS_FINAIS}'!$A:$A,0))),\"\")"
     )
-    return {
+    formulas = {
         "D": atividades,
         "E": prova,
         "G": f'=IF(OR(D{n}="",E{n}=""),"",ROUND(D{n}+E{n}+N(F{n}),2))',
@@ -94,3 +96,4 @@ def formulas_linha(n: int, col_soma_atividades: str) -> dict[str, str]:
         "I": f'=IF(G{n}="","",MAX(0,ROUND(G{n}-{LIMITE_N1},2)))',
         "J": f'=IF(E{n}="","Sem prova",IF(D{n}="","Sem atividades",IF(G{n}>{LIMITE_N1},"Acima de 10","OK")))',
     }
+    return {coluna: formula.replace(",", sep) for coluna, formula in formulas.items()}
