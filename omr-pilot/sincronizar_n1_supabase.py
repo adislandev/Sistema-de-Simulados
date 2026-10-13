@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 from google.oauth2 import service_account
@@ -39,6 +40,9 @@ def sincronizar(servico, disciplina: Disciplina) -> None:
     atividades = _ler_aba(valores, disciplina.planilha_id, ABA_ATIVIDADES, "A:Z")
     nota_n1 = _ler_aba(valores, disciplina.planilha_id, ABA_NOTA_N1, "A:F")
     linhas = linhas_atividades(atividades, nota_n1, disciplina.turma, disciplina.prova_tipo)
+    agora = datetime.now(timezone.utc).isoformat()
+    for linha in linhas:
+        linha["importado_em"] = agora  # a tela usa isso para saber quando a base foi atualizada
     upsert_linhas("notas_n1_atividades", linhas, on_conflict="ra,prova_tipo")
     com_extra = sum(1 for l in linhas if l["extra_manual"] is not None)
     print(f"  {len(linhas)} aluno(s) com atividades importados ({com_extra} com extra manual).")
