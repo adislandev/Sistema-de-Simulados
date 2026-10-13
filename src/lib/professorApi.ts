@@ -1,5 +1,12 @@
 import { supabase } from "./supabaseClient";
-import type { DesempenhoQuestao, ProvaPresencialResultado } from "../types/database";
+import type {
+  CandidatoVinculo,
+  DesempenhoQuestao,
+  NotaN1,
+  ProvaPresencialResultado,
+  StatusVinculo,
+  VinculoAluno,
+} from "../types/database";
 
 interface TentativaBruta {
   numero_tentativa: number;
@@ -266,4 +273,66 @@ export async function buscarRespostasTentativa(tentativaId: string): Promise<Res
     .filter((linha) => linha.questoes)
     .map((linha) => ({ questaoId: linha.questao_id, codigo: linha.questoes!.codigo, correta: linha.correta }))
     .sort((a, b) => a.codigo.localeCompare(b.codigo));
+}
+
+const numeroOuNulo = (valor: unknown): number | null =>
+  valor === null || valor === undefined ? null : Number(valor);
+
+export async function listarNotasN1(): Promise<NotaN1[]> {
+  const { data, error } = await supabase.from("vw_nota_n1").select("*").order("nome", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((l) => ({
+    ...l,
+    atividades_soma: numeroOuNulo(l.atividades_soma),
+    nota_objetiva: numeroOuNulo(l.nota_objetiva),
+    nota_dissertativa: numeroOuNulo(l.nota_dissertativa),
+    prova_final: numeroOuNulo(l.prova_final),
+    extra_manual: numeroOuNulo(l.extra_manual),
+    ponto_simulado: numeroOuNulo(l.ponto_simulado),
+    tentativas_validas: numeroOuNulo(l.tentativas_validas),
+    total_bruto_sem_simulado: numeroOuNulo(l.total_bruto_sem_simulado),
+    nota_n1_sem_simulado: numeroOuNulo(l.nota_n1_sem_simulado),
+    excedente_sem_simulado: numeroOuNulo(l.excedente_sem_simulado),
+    total_bruto_com_simulado: numeroOuNulo(l.total_bruto_com_simulado),
+    nota_n1_com_simulado: numeroOuNulo(l.nota_n1_com_simulado),
+    excedente_com_simulado: numeroOuNulo(l.excedente_com_simulado),
+  })) as NotaN1[];
+}
+
+interface VinculoBruto {
+  aluno_id: string;
+  ra: string | null;
+  status: StatusVinculo;
+  similaridade: number | null;
+  candidatos: CandidatoVinculo[] | null;
+  aluno: { nome: string; turma: string | null } | null;
+}
+
+export async function listarVinculosAlunos(): Promise<VinculoAluno[]> {
+  const { data, error } = await supabase
+    .from("alunos_ra")
+    .select("aluno_id, ra, status, similaridade, candidatos, aluno:alunos(nome, turma)");
+  if (error) throw error;
+  return ((data ?? []) as unknown as VinculoBruto[])
+    .filter((l) => l.aluno)
+    .map((l) => ({
+      alunoId: l.aluno_id,
+      alunoNome: l.aluno!.nome,
+      alunoTurma: l.aluno!.turma,
+      ra: l.ra,
+      status: l.status,
+      similaridade: numeroOuNulo(l.similaridade),
+      candidatos: l.candidatos ?? [],
+    }))
+    .sort((a, b) => a.alunoNome.localeCompare(b.alunoNome));
+}
+
+export async function confirmarVinculoAluno(alunoId: string, ra: string): Promise<void> {
+  const { error } = await supabase.rpc("rpc_confirmar_vinculo_aluno_ra", { p_aluno_id: alunoId, p_ra: ra });
+  if (error) throw error;
+}
+
+export async function rejeitarVinculoAluno(alunoId: string): Promise<void> {
+  const { error } = await supabase.rpc("rpc_rejeitar_vinculo_aluno_ra", { p_aluno_id: alunoId });
+  if (error) throw error;
 }
