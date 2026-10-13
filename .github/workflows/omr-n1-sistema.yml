@@ -1,15 +1,24 @@
 name: OMR - Levar a N1 para o sistema
 
+# 0) (opcional, regerar_planilha) relê o CSV "Grade de Notas" do Drive e regera as
+#    abas da planilha (Notas Finais, Atividades N1, Nota N1 - o Extra e preservado);
 # 1) copia atividades + extra manual da planilha (abas "Atividades N1" e "Nota N1")
 #    para o Supabase;
 # 2) sugere o vinculo aluno do simulado <-> RA (por nome) para o professor
 #    validar no sistema. Nunca altera vinculos ja confirmados/rejeitados.
+# Disparado pelo botao "Atualizar base" da aba Nota N1 (Edge Function
+# disparar-atualizacao-n1) ou manualmente.
 on:
   workflow_dispatch:
     inputs:
       simular_vinculos:
         description: "Sugerir vinculos so em simulacao (nao grava alunos_ra)"
         required: true
+        type: boolean
+        default: false
+      regerar_planilha:
+        description: "Antes, reler o CSV do Drive e regerar as abas da planilha (reescreve Atividades N1)"
+        required: false
         type: boolean
         default: false
 
@@ -33,6 +42,14 @@ jobs:
         run: printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/service-account.json"
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+      - name: Reler o CSV da plataforma e regerar as abas da planilha
+        if: ${{ inputs.regerar_planilha == true || inputs.regerar_planilha == 'true' }}
+        run: python gerar_nota_n1.py
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Importar atividades e extra manual (planilha para Supabase)
         run: python sincronizar_n1_supabase.py

@@ -337,3 +337,24 @@ export async function rejeitarVinculoAluno(alunoId: string): Promise<void> {
   const { error } = await supabase.rpc("rpc_rejeitar_vinculo_aluno_ra", { p_aluno_id: alunoId });
   if (error) throw error;
 }
+
+export async function dispararAtualizacaoN1(regerarPlanilha: boolean): Promise<void> {
+  const { data, error } = await supabase.functions.invoke("disparar-atualizacao-n1", {
+    method: "POST",
+    body: { regerar_planilha: regerarPlanilha },
+  });
+  if (error) throw error;
+  if (data?.error) throw new Error(data.error);
+}
+
+// Quando a base da N1 foi atualizada pela ultima vez (a importacao regrava importado_em
+// de todas as linhas). A tela usa para saber quando a atualizacao disparada terminou.
+export async function ultimaImportacaoN1(): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("notas_n1_atividades")
+    .select("importado_em")
+    .order("importado_em", { ascending: false })
+    .limit(1);
+  if (error) throw error;
+  return (data?.[0]?.importado_em as string | undefined) ?? null;
+}

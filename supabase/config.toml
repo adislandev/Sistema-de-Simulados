@@ -3,3 +3,6 @@ project_id = "oeokrgbivzloypvmwibd"
 # JWT validado dentro da funcao (o preflight CORS nao envia Authorization).
 [functions.disparar-correcao-provas]
 verify_jwt = false
+
+[functions.disparar-atualizacao-n1]
+verify_jwt = false

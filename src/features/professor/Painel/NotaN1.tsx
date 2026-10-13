@@ -1,16 +1,25 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import BarraProgresso from "../../../components/BarraProgresso/BarraProgresso";
 import CartaoResumo from "../../../components/CartaoResumo/CartaoResumo";
 import { exportarNotaN1Xlsx } from "../../../lib/exportarXlsx";
-import { formatarNota } from "../../../lib/format";
+import { formatarData, formatarNota } from "../../../lib/format";
 import {
   confirmarVinculoAluno,
+  dispararAtualizacaoN1,
   listarNotasN1,
   listarVinculosAlunos,
   rejeitarVinculoAluno,
+  ultimaImportacaoN1,
 } from "../../../lib/professorApi";
 import type { NotaN1, StatusVinculo, VinculoAluno } from "../../../types/database";
 
 const TENTATIVAS_PARA_PONTO = 3;
+const INTERVALO_VERIFICACAO_MS = 5_000;
+const LIMITE_ATUALIZACAO_MS = 120_000;
+const LIMITE_ATUALIZACAO_COM_CSV_MS = 180_000;
+const ESPERA_VINCULOS_MS = 8_000; // o passo dos vinculos roda logo depois da importacao
+
+const esperar = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 const NOTA_MAXIMA_N1 = 10;
 
 const GLOSSARIO: { termo: string; texto: string }[] = [
@@ -292,17 +301,30 @@ export default function NotaN1Aba() {
   const [mostrarResolvidos, setMostrarResolvidos] = useState(false);
   const [ocupadoId, setOcupadoId] = useState<string | null>(null);
   const [exportando, setExportando] = useState(false);
+  const [ultimaImportacao, setUltimaImportacao] = useState<string | null>(null);
+  const [atualizandoBase, setAtualizandoBase] = useState(false);
+  const [reler, setReler] = useState(false);
+  const [mensagemBase, setMensagemBase] = useState<string | null>(null);
+  const montado = useRef(true);
 
-  const buscarDados = useCallback(() => Promise.all([listarNotasN1(), listarVinculosAlunos()]), []);
+  useEffect(() => {
+    montado.current = true;
+    return () => {
+      montado.current = false;
+    };
+  }, []);
+
+  const buscarDados = useCallback(() => Promise.all([listarNotasN1(), listarVinculosAlunos(), ultimaImportacaoN1()]), []);
 
   // recarga disparada por botoes/acoes do professor
   const recarregar = useCallback(async () => {
     setCarregando(true);
     setErro(null);
     try {
-      const [n, v] = await buscarDados();
+      const [n, v, ultima] = await buscarDados();
       setNotas(n);
       setVinculos(v);
+      setUltimaImportacao(ultima);
       setDisciplina((atual) => atual || n[0]?.prova_tipo || "");
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não foi possível carregar a Nota N1.");
@@ -315,10 +337,11 @@ export default function NotaN1Aba() {
   useEffect(() => {
     let ativo = true;
     buscarDados()
-      .then(([n, v]) => {
+      .then(([n, v, ultima]) => {
         if (!ativo) return;
         setNotas(n);
         setVinculos(v);
+        setUltimaImportacao(ultima);
         setDisciplina((atual) => atual || n[0]?.prova_tipo || "");
       })
       .catch((e: unknown) => {
@@ -373,6 +396,39 @@ export default function NotaN1Aba() {
     }
   }
 
+  // Dispara a importacao (planilha -> sistema) no GitHub Actions e acompanha ate a base mudar.
+  async function atualizarBase() {
+    setAtualizandoBase(true);
+    setMensagemBase(null);
+    try {
+      const antes = await ultimaImportacaoN1();
+      await dispararAtualizacaoN1(reler);
+      const limite = Date.now() + (reler ? LIMITE_ATUALIZACAO_COM_CSV_MS : LIMITE_ATUALIZACAO_MS);
+      let concluiu = false;
+      while (montado.current && Date.now() < limite) {
+        await esperar(INTERVALO_VERIFICACAO_MS);
+        const agora = await ultimaImportacaoN1();
+        if (agora && agora !== antes) {
+          concluiu = true;
+          break;
+        }
+      }
+      if (!montado.current) return;
+      if (concluiu) {
+        await esperar(ESPERA_VINCULOS_MS);
+        if (!montado.current) return;
+        await recarregar();
+        setMensagemBase("Base atualizada com os dados da planilha.");
+      } else {
+        setMensagemBase("A atualização ainda está em andamento. Clique em Recarregar em instantes.");
+      }
+    } catch {
+      if (montado.current) setMensagemBase("Não foi possível atualizar a base. Tente novamente em instantes.");
+    } finally {
+      if (montado.current) setAtualizandoBase(false);
+    }
+  }
+
   async function exportar() {
     setExportando(true);
     try {
@@ -389,13 +445,47 @@ export default function NotaN1Aba() {
           Nota N1 = atividades + prova + extra manual (+ ponto do simulado), limitada a 10. As atividades e o extra manual
           vêm da planilha; a prova e o simulado vêm do sistema. A N1 é mostrada <strong>com e sem</strong> o simulado.
         </p>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button type="button" className="botao botao-secundario" onClick={() => void recarregar()} disabled={carregando}>
-            Atualizar
-          </button>
-          <button type="button" className="botao botao-secundario" onClick={() => void exportar()} disabled={exportando || linhas.length === 0}>
-            {exportando ? "Exportando..." : "Exportar XLSX"}
-          </button>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, maxWidth: 340 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              className="botao botao-secundario"
+              onClick={() => void recarregar()}
+              disabled={carregando || atualizandoBase}
+              title="Recarrega a tela com o que já está no sistema (não busca a planilha)"
+            >
+              Recarregar
+            </button>
+            <button type="button" className="botao botao-secundario" onClick={() => void exportar()} disabled={exportando || linhas.length === 0}>
+              {exportando ? "Exportando..." : "Exportar XLSX"}
+            </button>
+            <button
+              type="button"
+              className="botao botao-primario"
+              onClick={() => void atualizarBase()}
+              disabled={atualizandoBase}
+              title="Puxa da planilha as atividades e o extra manual e atualiza o sistema"
+            >
+              {atualizandoBase ? "Atualizando..." : "Atualizar base"}
+            </button>
+          </div>
+          <label
+            className="texto-suave"
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "0.8rem" }}
+            title="Use quando exportar um CSV novo da plataforma: reescreve a aba Atividades N1 da planilha com o CSV mais recente da pasta do Drive. O Extra (manual) é preservado."
+          >
+            <input type="checkbox" checked={reler} onChange={(e) => setReler(e.target.checked)} disabled={atualizandoBase} />
+            Reler também o CSV da plataforma
+          </label>
+          {atualizandoBase && <BarraProgresso rotulo={reler ? "Relendo o CSV e atualizando a base..." : "Atualizando a base..."} />}
+          {mensagemBase && (
+            <p className="texto-suave" style={{ margin: 0, fontSize: "0.8rem", textAlign: "right" }}>{mensagemBase}</p>
+          )}
+          {ultimaImportacao && (
+            <p className="texto-suave" style={{ margin: 0, fontSize: "0.75rem", textAlign: "right" }}>
+              Base atualizada em {formatarData(ultimaImportacao)}
+            </p>
+          )}
         </div>
       </div>
 
