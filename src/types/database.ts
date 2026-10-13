@@ -128,3 +128,55 @@ export interface ProvaPresencialResultado {
   dissertativas_ia: DissertativaIA[] | null;
   dissertativa_revisada_em: string | null;
 }
+
+export interface AtividadeN1 {
+  nome: string;
+  nota: number | null;
+}
+
+export type SituacaoN1 = "OK" | "Sem prova" | "Sem atividades";
+
+// Linha da view vw_nota_n1 (ver supabase/migrations/0009_nota_n1.sql)
+export interface NotaN1 {
+  ra: string;
+  nome: string;
+  turma: string | null;
+  prova_tipo: string;
+  status_plataforma: string | null;
+  atividades: AtividadeN1[];
+  atividades_soma: number | null;
+  nota_objetiva: number | null;
+  nota_dissertativa: number | null;
+  prova_final: number | null;
+  dissertativa_confirmada: boolean | null;
+  extra_manual: number | null;
+  ponto_simulado: number | null;
+  tentativas_validas: number | null;
+  vinculo_status: "confirmado" | "sugerido" | null;
+  total_bruto_sem_simulado: number | null;
+  nota_n1_sem_simulado: number | null;
+  excedente_sem_simulado: number | null;
+  total_bruto_com_simulado: number | null;
+  nota_n1_com_simulado: number | null;
+  excedente_com_simulado: number | null;
+  situacao: SituacaoN1;
+}
+
+export type StatusVinculo = "sugerido" | "ambiguo" | "sem_correspondencia" | "confirmado" | "rejeitado";
+
+export interface CandidatoVinculo {
+  ra: string;
+  nome: string;
+  similaridade: number;
+}
+
+// Vinculo do aluno do simulado (so nome/turma digitados) com o RA (tabela alunos_ra)
+export interface VinculoAluno {
+  alunoId: string;
+  alunoNome: string;
+  alunoTurma: string | null;
+  ra: string | null;
+  status: StatusVinculo;
+  similaridade: number | null;
+  candidatos: CandidatoVinculo[];
+}

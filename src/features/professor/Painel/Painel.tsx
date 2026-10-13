@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BarChart from "../../../components/BarChart/BarChart";
 import BarraProgresso from "../../../components/BarraProgresso/BarraProgresso";
+import CartaoResumo from "../../../components/CartaoResumo/CartaoResumo";
 import { listarSimuladosAtivos, type SimuladoComDisciplina } from "../../../lib/alunoApi";
 import {
   apagarResultadoAluno,
@@ -27,12 +28,13 @@ import { supabase } from "../../../lib/supabaseClient";
 import { exportarResultadosXlsx } from "../../../lib/exportarXlsx";
 import { formatarData, formatarNota, formatarPontoExtra, formatarTempo } from "../../../lib/format";
 import { useSessaoProfessor } from "../useSessaoProfessor";
+import NotaN1Aba from "./NotaN1";
 
 const DURACAO_ANIMACAO_CORRECAO_MS = 70_000;
 const DURACAO_MINIMA_SALVANDO_NOTA_MS = 1_500;
 const DURACAO_MENSAGEM_NOTA_CONFIRMADA_MS = 3_000;
 
-type Aba = "resultados" | "presenciais" | "lixeira";
+type Aba = "resultados" | "presenciais" | "nota-n1" | "lixeira";
 
 interface AlunoSelecionado {
   alunoId: string;
@@ -75,57 +77,6 @@ function classeEmblemaNotaPresencial(percentual: number): string {
   if (percentual >= 70) return "emblema-sucesso";
   if (percentual < 40) return "emblema-erro";
   return "emblema-aviso";
-}
-
-function CartaoResumo({
-  icone,
-  cor,
-  corFundo,
-  label,
-  valor,
-}: {
-  icone: React.ReactNode;
-  cor: string;
-  corFundo: string;
-  label: string;
-  valor: number | string;
-}) {
-  return (
-    <div className="cartao" style={{ padding: 16, display: "flex", alignItems: "center", gap: 14 }}>
-      <span
-        aria-hidden="true"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 40,
-          height: 40,
-          borderRadius: 10,
-          background: corFundo,
-          color: cor,
-          flexShrink: 0,
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {icone}
-        </svg>
-      </span>
-      <div>
-        <p className="texto-suave" style={{ margin: "0 0 2px" }}>{label}</p>
-        <p style={{ margin: 0, fontSize: "1.5rem", fontWeight: 700 }}>{valor}</p>
-      </div>
-    </div>
-  );
 }
 
 export default function Painel() {
@@ -736,6 +687,29 @@ export default function Painel() {
               </button>
               <button
                 type="button"
+                className={`botao ${aba === "nota-n1" ? "botao-primario" : "botao-secundario"}`}
+                onClick={() => setAba("nota-n1")}
+                style={{ display: "flex", alignItems: "center", gap: 6 }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 3v18h18" />
+                  <path d="M7 15l4-4 3 3 5-6" />
+                </svg>
+                Nota N1
+              </button>
+              <button
+                type="button"
                 className={`botao ${aba === "lixeira" ? "botao-primario" : "botao-secundario"}`}
                 onClick={abrirLixeira}
                 style={{ display: "flex", alignItems: "center", gap: 6 }}
@@ -1075,6 +1049,8 @@ export default function Painel() {
               )}
             </>
           )}
+
+          {aba === "nota-n1" && <NotaN1Aba />}
 
           {aba === "lixeira" && (
             <>
