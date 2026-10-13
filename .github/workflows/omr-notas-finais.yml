@@ -1,0 +1,44 @@
+name: OMR - Gerar aba Notas Finais
+
+# Reescreve a aba "Notas Finais" de cada planilha com objetiva + dissertativa
+# confirmada no painel (pendentes ficam em branco). Nao toca na aba principal.
+on:
+  workflow_dispatch:
+    inputs:
+      disciplina:
+        description: "logica, ergonomia ou vazio para todas"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  notas-finais:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: omr-pilot
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Preparar credenciais (a partir de Secrets)
+        run: printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/service-account.json"
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+      - name: Gerar Notas Finais
+        run: |
+          ARGS=""
+          if [ -n "$DISCIPLINA" ]; then ARGS="--disciplina=$DISCIPLINA"; fi
+          python gerar_notas_finais.py $ARGS
+        env:
+          DISCIPLINA: ${{ inputs.disciplina }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
