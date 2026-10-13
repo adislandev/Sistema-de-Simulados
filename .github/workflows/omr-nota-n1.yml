@@ -1,0 +1,44 @@
+name: OMR - Gerar aba Nota N1
+
+# Gera as abas "Atividades N1" e "Nota N1" (e atualiza "Notas Finais") a partir do CSV da plataforma + prova
+# confirmada no painel (pendentes ficam em branco). Nao toca na aba principal.
+on:
+  workflow_dispatch:
+    inputs:
+      disciplina:
+        description: "logica, ergonomia ou vazio para todas"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  nota-n1:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: omr-pilot
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Preparar credenciais (a partir de Secrets)
+        run: printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/service-account.json"
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+      - name: Gerar Nota N1
+        run: |
+          ARGS=""
+          if [ -n "$DISCIPLINA" ]; then ARGS="--disciplina=$DISCIPLINA"; fi
+          python gerar_nota_n1.py $ARGS
+        env:
+          DISCIPLINA: ${{ inputs.disciplina }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

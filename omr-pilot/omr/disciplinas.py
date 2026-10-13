@@ -35,6 +35,10 @@ class Disciplina:
     lista_chamada_drive_id: str | None = None
     # arquivos da pasta que nao sao provas (ex.: a propria lista de presenca escaneada)
     arquivos_ignorados: tuple[str, ...] = ()
+    # pasta do Drive onde o professor sobe o CSV "Grade de Notas" exportado da
+    # plataforma (atividades da N1); usa o arquivo mais recente com esse prefixo
+    pasta_atividades_id: str | None = None
+    prefixo_atividades: str = "Grade de Notas"
 
 
 LOGICA = Disciplina(
@@ -48,6 +52,7 @@ LOGICA = Disciplina(
     rubrica=DOCS / "rubrica-dissertativas-provas-presenciais.md",
     lista_chamada_csv=RAIZ / "dados" / "lista_chamada.csv",
     arquivos_ignorados=("Lista de Presença.pdf",),
+    pasta_atividades_id="1NEZLs8dZEYHy5vH2Dikb1xbxq2Fp5Qcp",
 )
 
 ERGONOMIA = Disciplina(
@@ -60,6 +65,7 @@ ERGONOMIA = Disciplina(
     gabarito_doc_id="1ZON5qAN-mcv00xh2_vhDaSpZCkekmrmzD1KuFnRL49w",
     rubrica=DOCS / "rubrica-dissertativas-ergonomia.md",
     lista_chamada_drive_id="176YvwwsTQ4vqPXSNazxE4EwFOhNihtf5",
+    pasta_atividades_id="14ZFEb9sjZY_3VUwGyWlYwXSkKrSVQWcp",
 )
 
 # Ordem de processamento: Logica primeiro, para uma falha em outra disciplina
