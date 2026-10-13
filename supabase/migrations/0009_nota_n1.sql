@@ -182,6 +182,9 @@ $$;
 
 revoke all on notas_n1_atividades, alunos_ra, vw_ponto_simulado_ra, vw_nota_n1 from anon, public;
 grant select on notas_n1_atividades, alunos_ra, vw_ponto_simulado_ra, vw_nota_n1 to authenticated;
+-- o Supabase concede escrita a "authenticated" por padrao; o RLS barra insert/update/delete,
+-- mas nao o TRUNCATE - o professor so le (a escrita e do pipeline e das RPCs security definer)
+revoke insert, update, delete, truncate, references, trigger on notas_n1_atividades, alunos_ra, vw_ponto_simulado_ra, vw_nota_n1 from authenticated;
 
 revoke execute on function rpc_confirmar_vinculo_aluno_ra(uuid, text), rpc_rejeitar_vinculo_aluno_ra(uuid) from public, anon;
 grant execute on function rpc_confirmar_vinculo_aluno_ra(uuid, text), rpc_rejeitar_vinculo_aluno_ra(uuid) to authenticated;
