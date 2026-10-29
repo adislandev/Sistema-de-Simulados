@@ -91,7 +91,7 @@ cmd_start() {
   if [ -z "$base" ]; then
     echo "Erro: nenhuma branch base informada." >&2
     echo "Use --base <branch-base> ou crie .agent-workflow.local com BASE_BRANCH=<branch>." >&2
-    echo "Ver Regra 17 do AGENT-WORKFLOW.md: nunca presumir a branch base." >&2
+    echo "Ver Regra 17 do docs/processo/AGENT-WORKFLOW.md: nunca presumir a branch base." >&2
     exit 1
   fi
   if ! branch_exists "$base"; then

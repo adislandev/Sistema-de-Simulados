@@ -37,9 +37,9 @@ O objetivo é apenas diagnosticar a capacidade operacional do agente naquele amb
 
 O agente deve localizar e ler:
 
-1. o protocolo operacional principal do projeto, normalmente `AGENT-WORKFLOW.md`;
+1. o protocolo operacional principal do projeto, normalmente `docs/processo/AGENT-WORKFLOW.md`;
 
-2. o próprio `AGENT-CHECK-IN.md`, para compreender o procedimento de entrada e os critérios de aprovação;
+2. o próprio `docs/processo/AGENT-CHECK-IN.md`, para compreender o procedimento de entrada e os critérios de aprovação;
 
 3. a documentação específica indicada pelo protocolo;
 
@@ -171,7 +171,7 @@ O agente não deve se declarar apto quando houver uma limitação que impeça o 
 
 O check-in não autoriza nenhuma tarefa.
 
-Mesmo que o resultado seja `APTO PARA EXECUTAR TAREFAS`, o agente deve aguardar uma demanda autorizada e seguir o `AGENT-WORKFLOW.md` para executá-la.
+Mesmo que o resultado seja `APTO PARA EXECUTAR TAREFAS`, o agente deve aguardar uma demanda autorizada e seguir o `docs/processo/AGENT-WORKFLOW.md` para executá-la.
 
 O resultado do check-in não substitui:
 

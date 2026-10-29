@@ -391,4 +391,4 @@ Nenhum agente deve executar `git checkout`, `git switch` ou operação equivalen
 
 Se o isolamento necessário não estiver disponível, o agente deve parar e solicitar orientação antes de modificar arquivos ou branches.
 
-Para a implementação prática do isolamento por Git worktree, consultar `AGENT-WORKTREES.md`.
+Para a implementação prática do isolamento por Git worktree, consultar `docs/processo/AGENT-WORKTREES.md`.
