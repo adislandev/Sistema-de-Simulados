@@ -1,5 +1,5 @@
 // Gera o seed SQL inicial (0002_seed_conteudo.sql) a partir de
-// BANCO-DE-QUESTOES.md — fonte de verdade do conteúdo do MVP.
+// docs/produto/BANCO-DE-QUESTOES.md — fonte de verdade do conteúdo do MVP.
 //
 // Não inventa nem altera questões: só estrutura o que já está no
 // markdown em INSERTs SQL, e valida o resultado contra a tabela
@@ -15,7 +15,7 @@ import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const raizProjeto = path.resolve(__dirname, "..", "..");
-const md = readFileSync(path.join(raizProjeto, "BANCO-DE-QUESTOES.md"), "utf8");
+const md = readFileSync(path.join(raizProjeto, "docs/produto/BANCO-DE-QUESTOES.md"), "utf8");
 const linhas = md.split(/\r?\n/);
 
 const DISCIPLINAS = {

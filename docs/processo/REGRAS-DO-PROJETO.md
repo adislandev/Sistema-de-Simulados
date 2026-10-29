@@ -26,13 +26,13 @@ do projeto.
 
 Documentos principais:
 
-REGRAS-DO-PROJETO.md --- regras específicas deste projeto.
+docs/processo/REGRAS-DO-PROJETO.md --- regras específicas deste projeto.
 
 README.md --- visão geral e instruções rápidas.
 
-PRD-Sistema-de-Simulados.md --- requisitos, regras e escopo.
+docs/produto/PRD-Sistema-de-Simulados.md --- requisitos, regras e escopo.
 
-BANCO-DE-QUESTOES.md --- questões, alternativas, respostas,
+docs/produto/BANCO-DE-QUESTOES.md --- questões, alternativas, respostas,
 competências e origem.
 
 PROMPT-INICIAL-CLOUD-CODE.md --- briefing inicial do projeto,
@@ -253,7 +253,7 @@ disciplina.
 
 O banco de questões está documentado em:
 
-BANCO-DE-QUESTOES.md
+docs/produto/BANCO-DE-QUESTOES.md
 
 Tipos de questão utilizados:
 
@@ -480,7 +480,7 @@ Não adicionar elementos apenas por estética.
 
 Antes de implementar uma demanda relevante:
 
-Ler REGRAS-DO-PROJETO.md.
+Ler docs/processo/REGRAS-DO-PROJETO.md.
 
 Consultar o PRD quando necessário.
 
@@ -515,13 +515,13 @@ A fonte de verdade é:
 
 código atual;
 
-REGRAS-DO-PROJETO.md;
+docs/processo/REGRAS-DO-PROJETO.md;
 
 README.md;
 
-PRD-Sistema-de-Simulados.md;
+docs/produto/PRD-Sistema-de-Simulados.md;
 
-BANCO-DE-QUESTOES.md;
+docs/produto/BANCO-DE-QUESTOES.md;
 
 demais documentos existentes;
 
@@ -540,7 +540,7 @@ não alterar automaticamente;
 
 solicitar validação.
 
-O agente deve tratar REGRAS-DO-PROJETO.md como manual operacional
+O agente deve tratar docs/processo/REGRAS-DO-PROJETO.md como manual operacional
 específico do projeto, independentemente do modelo utilizado.
 
 20. ALTERAÇÕES DE ESCOPO
@@ -620,7 +620,7 @@ atualizar o documento correspondente;
 
 evitar documentação conflitante com o código.
 
-O REGRAS-DO-PROJETO.md deve permanecer relativamente objetivo.
+O docs/processo/REGRAS-DO-PROJETO.md deve permanecer relativamente objetivo.
 
 Detalhes extensos devem permanecer no PRD ou em documentos específicos.
 

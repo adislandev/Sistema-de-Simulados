@@ -1,14 +1,14 @@
 # AGENT-WORKTREES — implementação prática da Regra 18
 
-> **Relação com o AGENT-WORKFLOW.md**
+> **Relação com o docs/processo/AGENT-WORKFLOW.md**
 >
-> Este documento é um guia operacional complementar ao `AGENT-WORKFLOW.md`.
-> A regra normativa é a Regra 18 do `AGENT-WORKFLOW.md`.
+> Este documento é um guia operacional complementar ao `docs/processo/AGENT-WORKFLOW.md`.
+> A regra normativa é a Regra 18 do `docs/processo/AGENT-WORKFLOW.md`.
 > Este arquivo apenas descreve a implementação prática do isolamento por Git worktree.
 >
-> Em caso de divergência, o `AGENT-WORKFLOW.md` prevalece.
+> Em caso de divergência, o `docs/processo/AGENT-WORKFLOW.md` prevalece.
 
-Este documento operacionaliza a **Regra 18** do `AGENT-WORKFLOW.md`
+Este documento operacionaliza a **Regra 18** do `docs/processo/AGENT-WORKFLOW.md`
 ("Isolamento de trabalho entre agentes simultâneos"). Ele descreve como usar
 o script `scripts/agent-worktree.sh` para que cada agente/tarefa tenha sua
 própria branch, seu próprio diretório de trabalho (worktree) e seu próprio
@@ -24,7 +24,7 @@ suporte a `git worktree` (Git ≥ 2.5).
 ## 1. Pré-requisito: identificar a branch base
 
 Antes de criar um worktree, a branch base da tarefa deve ser identificada
-seguindo a **Regra 17** do `AGENT-WORKFLOW.md` (nunca presumir `main`,
+seguindo a **Regra 17** do `docs/processo/AGENT-WORKFLOW.md` (nunca presumir `main`,
 `master`, `develop` ou qualquer outro nome) e a documentação específica do
 projeto (quando existir uma seção equivalente à "Branch operacional e base
 de integração").
